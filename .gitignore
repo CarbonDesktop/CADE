@@ -16,3 +16,18 @@ Makefile.in
 /install-sh
 /missing
 /stamp-h1
+
+config.status
+*.log
+config.h*
+stamp-*
+Makefile
+
+.deps/
+.dirstamp
+
+# C files
+*.o
+
+# Project
+cade-shell
