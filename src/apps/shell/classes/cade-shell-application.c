@@ -3,11 +3,12 @@
 * @Date:   13-09-2016 20:09:50
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   mame98
-* @Last modified time: 13-09-2016 21:09:16
+* @Last modified time: 14-09-2016 20:09:07
 * @License: MIT
 */
 
 #include "cade-shell-application.h"
+#include "cade-panel-window.h"
 
 typedef struct _CadeShellApplicationPrivate CadeShellApplicationPrivate;
 
@@ -34,8 +35,9 @@ G_DEFINE_TYPE (CadeShellApplication, cade_shell_application, GTK_TYPE_APPLICATIO
 
 void cade_shell_application_activate(GApplication *app)
 {
-  GtkWidget *test = gtk_application_window_new(GTK_APPLICATION(app));
-  gtk_window_present(GTK_WINDOW(test));
+  CadePanelWindow *panel = cade_panel_window_new(GTK_APPLICATION(app));
+
+  gtk_window_present(GTK_WINDOW(panel));
 }
 
 /* Object 'Glue' */
@@ -53,11 +55,11 @@ cade_shell_application_class_init (CadeShellApplicationClass *klass)
 static void
 cade_shell_application_init (CadeShellApplication *self)
 {
-  g_application_set_application_id(G_APPLICATION(self), "org.cade.shell");
+
 }
 
 CadeShellApplication *
 cade_shell_application_new (void)
 {
-  return g_object_new (CADE_TYPE_SHELL_APPLICATION, NULL);
+  return g_object_new (CADE_TYPE_SHELL_APPLICATION, "application-id", "org.cade.shell", NULL);
 }
