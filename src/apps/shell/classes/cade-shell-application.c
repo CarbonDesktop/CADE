@@ -3,7 +3,7 @@
 * @Date:   13-09-2016 20:09:50
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   mame98
-* @Last modified time: 14-09-2016 20:09:07
+* @Last modified time: 22-09-2016 16:09:97
 * @License: MIT
 */
 
@@ -38,6 +38,7 @@ void cade_shell_application_activate(GApplication *app)
   CadePanelWindow *panel = cade_panel_window_new(GTK_APPLICATION(app));
 
   gtk_window_present(GTK_WINDOW(panel));
+  gtk_widget_show_all(GTK_WIDGET(panel));
 }
 
 /* Object 'Glue' */
