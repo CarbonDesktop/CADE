@@ -3,15 +3,17 @@
 * @Date:   22-09-2016 15:09:62
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   mame98
-* @Last modified time: 23-09-2016 17:09:82
+* @Last modified time: 23-09-2016 19:09:81
 * @License: MIT
 */
 
 
 
 #include "cade-app-menu.h"
+#include "cade-app-row.h"
 
 #include <string.h>
+
 
 enum APP_MENU_MODE
 {
@@ -45,34 +47,23 @@ cade_app_menu_class_init (CadeAppMenuClass *klass)
 
 /* 'private' */
 
-static const gchar *_row_get_text(GtkListBoxRow *row)
-{
-  GtkWidget *box = gtk_bin_get_child(GTK_BIN(row));
-  GList *elements = gtk_container_get_children(GTK_CONTAINER(box));
-  return gtk_label_get_text(GTK_LABEL(elements->next->data));
-}
-
 gint _app_menu_sort_func(GtkListBoxRow *a, GtkListBoxRow *b, gpointer data)
 {
   CadeAppMenu *menu = CADE_APP_MENU(data);
   if(a == NULL || b == GTK_LIST_BOX_ROW(menu->back))
+  {
     return -1;
+  }
   else if(b == NULL || a == GTK_LIST_BOX_ROW(menu->back))
+  {
     return 1;
+  }
   else
-    return strcmp(_row_get_text(a), _row_get_text(b));
-}
-
-static GtkWidget *_app_entry_new(gchar *name, gchar *icon)
-{
-  GtkWidget *ret = gtk_list_box_row_new();
-  GtkWidget *box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
-  gtk_container_add(GTK_CONTAINER(ret), box);
-
-  gtk_box_pack_start(GTK_BOX(box), gtk_image_new_from_icon_name(icon, GTK_ICON_SIZE_LARGE_TOOLBAR), FALSE, FALSE, 0);
-  gtk_box_pack_end(GTK_BOX(box), gtk_label_new(name), FALSE, FALSE, 0);
-
-  return ret;
+  {
+    CadeAppRow *rowA = CADE_APP_ROW(a);
+    CadeAppRow *rowB = CADE_APP_ROW(b);
+    return strcmp(cade_app_row_get_name(rowA), cade_app_row_get_name(rowB));
+  }
 }
 
 static gchar *MENU_ITEMS[12][2] = { {"Audio", "applications-multimedia"}, {"Video", "applications-multimedia"}, {"Development", "applications-development"}, {"Education", "applications-science"}, {"Game", "applications-games"}, {"Graphics", "applications-graphics"}, {"Network", "applications-internet"}, {"Office", "applications-office"}, {"Science", "applications-science"}, {"Settings", "preferences-system"}, {"System", "applications-system"}, {"Utility", "applications-system"}};
@@ -85,31 +76,15 @@ static void _build_category_list(CadeAppMenu *menu)
 
   menu->categories = g_hash_table_new(g_str_hash, g_str_equal);
 
-  menu->back = gtk_list_box_row_new();
-  GtkWidget *box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
-  gtk_container_add(GTK_CONTAINER(menu->back), box);
-  gtk_box_pack_end(GTK_BOX(box), gtk_label_new("<< back"), FALSE, FALSE, 0);
-
+  menu->back = GTK_WIDGET(cade_app_row_new(FALSE, "Back", "gtk-go-back", "Go back to previous page", NULL));
+  cade_app_row_make_bold(CADE_APP_ROW(menu->back));
 
   for(gsize x = 0; x < n; x++)
   {
 
-    GtkWidget *row = gtk_list_box_row_new();
-    GtkWidget *box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
-    gtk_container_add(GTK_CONTAINER(row), box);
-
-    GtkWidget *icon = gtk_image_new_from_icon_name(MENU_ITEMS[x][1], GTK_ICON_SIZE_LARGE_TOOLBAR);
-    GtkWidget *text = gtk_label_new("");
-
-    gchar *temp = g_strdup_printf("<span size='x-large' font-weight='bold'>%s</span>", MENU_ITEMS[x][0]);
-    gtk_label_set_markup(GTK_LABEL(text), temp);
-
-
-    gtk_box_pack_start(GTK_BOX(box), icon, FALSE, FALSE, 0);
-    gtk_box_pack_end(GTK_BOX(box), text, FALSE, FALSE, 0);
-
+    GtkWidget *row = GTK_WIDGET(cade_app_row_new(FALSE, MENU_ITEMS[x][0], MENU_ITEMS[x][1], NULL, NULL));
+    cade_app_row_make_bold(CADE_APP_ROW(row));
     ret = g_list_append(ret, row);
-    g_free(temp);
 
     g_hash_table_insert(menu->categories, MENU_ITEMS[x][0], NULL);
   }
@@ -145,7 +120,7 @@ void app_activated (GtkListBox *box, GtkListBoxRow *row, CadeAppMenu *menu)
 
   if(menu->mode == MODE_START)
   {
-    const gchar *cat = _row_get_text(row);
+    const gchar *cat = cade_app_row_get_name(CADE_APP_ROW(row));
     GList *set = g_hash_table_lookup(menu->categories, cat);
 
     if(set == NULL)
@@ -215,7 +190,9 @@ cade_app_menu_init (CadeAppMenu *self)
 
     gchar *name = g_key_file_get_locale_string(keyfile, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_NAME, NULL, NULL);
     gchar *icon = g_key_file_get_locale_string(keyfile, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_ICON, NULL, NULL);
-    GtkWidget *row = _app_entry_new(name, icon);
+    gchar *description = g_key_file_get_locale_string(keyfile, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_COMMENT, NULL, NULL);
+    gchar *version = g_key_file_get_locale_string(keyfile, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_VERSION, NULL, NULL);
+    GtkWidget *row = GTK_WIDGET(cade_app_row_new(TRUE, name, icon, description, version));
 
     gboolean found = FALSE;
     for(gsize x = 0; x < nCat && found != TRUE ;x++)
