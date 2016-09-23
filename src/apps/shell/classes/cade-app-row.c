@@ -3,7 +3,7 @@
 * @Date:   23-09-2016 19:09:43
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   mame98
-* @Last modified time: 23-09-2016 19:09:72
+* @Last modified time: 23-09-2016 20:09:53
 * @License: MIT
 */
 
@@ -20,6 +20,7 @@ struct _CadeAppRow {
   gchar *icon;
   gchar *description;
   gchar *version;
+  gchar *exec;
   gboolean tooltip;
 };
 
@@ -49,10 +50,18 @@ static void finalize(CadeAppRow *self)
   gtk_box_pack_end(b, self->label, FALSE, FALSE, 0);
 
   gtk_container_add(GTK_CONTAINER(self), box);
+
+  if(self->tooltip)
+  {
+    gchar *temp = g_strdup_printf("<span font-weight='bold'>Name:</span> %s\n \
+<span font-weight='bold'>Description:</span> %s\n ", self->name, self->description);
+
+    gtk_widget_set_tooltip_markup(GTK_WIDGET(self), temp);
+  }
 }
 
 CadeAppRow *
-cade_app_row_new (gboolean tooltip, gchar *name, gchar *icon, gchar *description, gchar *version)
+cade_app_row_new (gboolean tooltip, gchar *name, gchar *icon, gchar *description, gchar *version, gchar *exec)
 {
   CadeAppRow *row = g_object_new (CADE_TYPE_APP_ROW, NULL);
   row->name = name;
@@ -60,6 +69,7 @@ cade_app_row_new (gboolean tooltip, gchar *name, gchar *icon, gchar *description
   row->description = description;
   row->version = version;
   row->tooltip = tooltip;
+  row->exec = exec;
   finalize(row);
   return row;
 }

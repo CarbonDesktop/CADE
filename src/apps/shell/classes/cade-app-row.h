@@ -3,7 +3,7 @@
 * @Date:   23-09-2016 19:09:43
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   mame98
-* @Last modified time: 23-09-2016 19:09:97
+* @Last modified time: 23-09-2016 20:09:76
 * @License: MIT
 */
 
@@ -28,7 +28,7 @@ typedef struct _CadeAppRow        CadeAppRow;
 typedef struct _CadeAppRowClass   CadeAppRowClass;
 
 GType       cade_app_row_get_type (void) G_GNUC_CONST;
-CadeAppRow *cade_app_row_new (gboolean tooltip, gchar *name, gchar *icon, gchar *description, gchar *version);
+CadeAppRow *cade_app_row_new (gboolean tooltip, gchar *name, gchar *icon, gchar *description, gchar *version, gchar *exec);
 gchar      *cade_app_row_get_name(CadeAppRow *row);
 void        cade_app_row_make_bold(CadeAppRow *row);
 

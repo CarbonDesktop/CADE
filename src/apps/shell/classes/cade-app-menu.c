@@ -3,7 +3,7 @@
 * @Date:   22-09-2016 15:09:62
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   mame98
-* @Last modified time: 23-09-2016 19:09:81
+* @Last modified time: 23-09-2016 20:09:93
 * @License: MIT
 */
 
@@ -76,13 +76,13 @@ static void _build_category_list(CadeAppMenu *menu)
 
   menu->categories = g_hash_table_new(g_str_hash, g_str_equal);
 
-  menu->back = GTK_WIDGET(cade_app_row_new(FALSE, "Back", "gtk-go-back", "Go back to previous page", NULL));
+  menu->back = GTK_WIDGET(cade_app_row_new(FALSE, "Back", "gtk-go-back", "Go back to previous page", NULL, NULL));
   cade_app_row_make_bold(CADE_APP_ROW(menu->back));
 
   for(gsize x = 0; x < n; x++)
   {
 
-    GtkWidget *row = GTK_WIDGET(cade_app_row_new(FALSE, MENU_ITEMS[x][0], MENU_ITEMS[x][1], NULL, NULL));
+    GtkWidget *row = GTK_WIDGET(cade_app_row_new(FALSE, MENU_ITEMS[x][0], MENU_ITEMS[x][1], NULL, NULL, NULL));
     cade_app_row_make_bold(CADE_APP_ROW(row));
     ret = g_list_append(ret, row);
 
@@ -149,7 +149,7 @@ void app_activated (GtkListBox *box, GtkListBoxRow *row, CadeAppMenu *menu)
 static void
 cade_app_menu_init (CadeAppMenu *self)
 {
-
+  gtk_window_set_skip_taskbar_hint(GTK_WINDOW(self), TRUE);
   gtk_window_set_decorated(GTK_WINDOW(self), FALSE);
   gtk_container_set_border_width(GTK_CONTAINER(self), 12);
 
@@ -184,6 +184,30 @@ cade_app_menu_init (CadeAppMenu *self)
     GKeyFile *keyfile = g_key_file_new();
     g_key_file_load_from_file(keyfile, full_path, G_KEY_FILE_NONE, NULL);
 
+    gchar *type = g_key_file_get_locale_string(keyfile, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_TYPE, NULL, NULL);
+    if(type != NULL)
+    {
+      if(strcmp(type, G_KEY_FILE_DESKTOP_TYPE_APPLICATION) != 0)
+      {
+        g_key_file_unref(keyfile);
+        continue;
+      }
+    }
+
+    if(g_key_file_get_boolean(keyfile, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_HIDDEN, NULL))
+    {
+      g_key_file_unref(keyfile);
+      continue;
+    }
+
+    gsize nFilter;
+    gchar **onlyIn = g_key_file_get_string_list(keyfile, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_ONLY_SHOW_IN, &nFilter, NULL);
+    if(nFilter != 0)
+    {
+      g_key_file_unref(keyfile);
+      continue;
+    }
+
     gsize nCat;
     gchar **categories = g_key_file_get_string_list(keyfile, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_CATEGORIES, &nCat, NULL);
 
@@ -192,7 +216,9 @@ cade_app_menu_init (CadeAppMenu *self)
     gchar *icon = g_key_file_get_locale_string(keyfile, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_ICON, NULL, NULL);
     gchar *description = g_key_file_get_locale_string(keyfile, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_COMMENT, NULL, NULL);
     gchar *version = g_key_file_get_locale_string(keyfile, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_VERSION, NULL, NULL);
-    GtkWidget *row = GTK_WIDGET(cade_app_row_new(TRUE, name, icon, description, version));
+    gchar *exec = g_key_file_get_locale_string(keyfile, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_EXEC, NULL, NULL);
+
+    GtkWidget *row = GTK_WIDGET(cade_app_row_new(TRUE, name, icon, description, version, exec));
 
     gboolean found = FALSE;
     for(gsize x = 0; x < nCat && found != TRUE ;x++)
@@ -201,11 +227,14 @@ cade_app_menu_init (CadeAppMenu *self)
       {
         if(strcmp(MENU_ITEMS[y][0], categories[x]) == 0)
         {
-          GList *list = g_hash_table_lookup(self->categories, categories[x]);
-          list = g_list_append(list, row);
-          g_hash_table_replace(self->categories, categories[x], list);
-          found = TRUE;
-          break;
+          if(!found)
+          {
+            GList *list = g_hash_table_lookup(self->categories, categories[x]);
+            list = g_list_append(list, row);
+            g_hash_table_replace(self->categories, categories[x], list);
+            found = TRUE;
+            break;
+          }
         }
       }
     }
