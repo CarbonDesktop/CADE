@@ -3,7 +3,7 @@
 * @Date:   22-09-2016 15:09:62
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   mame98
-* @Last modified time: 23-09-2016 20:09:93
+* @Last modified time: 24-09-2016 11:09:79
 * @License: MIT
 */
 
@@ -266,4 +266,10 @@ CadeAppMenu *
 cade_app_menu_new (GtkWidget *parent)
 {
   return g_object_new (CADE_TYPE_APP_MENU, "type" ,GTK_WINDOW_POPUP, NULL);
+}
+
+void cade_app_menu_revert(CadeAppMenu *menu)
+{
+  menu->mode = MODE_START;
+  app_activated(GTK_LIST_BOX(menu->list), GTK_LIST_BOX_ROW(menu->back), menu);
 }

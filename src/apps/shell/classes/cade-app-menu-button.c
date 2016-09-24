@@ -3,7 +3,7 @@
 * @Date:   22-09-2016 15:09:02
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   mame98
-* @Last modified time: 22-09-2016 16:09:94
+* @Last modified time: 24-09-2016 11:09:71
 * @License: MIT
 */
 
@@ -36,6 +36,7 @@ gboolean cade_app_menu_button_toggle(GtkToggleButton *tb)
   else
   {
     gtk_widget_hide(GTK_WIDGET(self->menu));
+    cade_app_menu_revert(self->menu);
   }
 
   return FALSE;

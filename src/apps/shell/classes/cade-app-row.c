@@ -3,7 +3,7 @@
 * @Date:   23-09-2016 19:09:43
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   mame98
-* @Last modified time: 23-09-2016 20:09:53
+* @Last modified time: 24-09-2016 12:09:71
 * @License: MIT
 */
 
@@ -57,6 +57,7 @@ static void finalize(CadeAppRow *self)
 <span font-weight='bold'>Description:</span> %s\n ", self->name, self->description);
 
     gtk_widget_set_tooltip_markup(GTK_WIDGET(self), temp);
+    g_free(temp);
   }
 }
 
