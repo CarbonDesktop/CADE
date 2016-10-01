@@ -3,7 +3,7 @@
 * @Date:   22-09-2016 15:09:62
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   mame98
-* @Last modified time: 24-09-2016 11:09:79
+* @Last modified time: 01-10-2016 14:10:32
 * @License: MIT
 */
 
@@ -46,6 +46,12 @@ cade_app_menu_class_init (CadeAppMenuClass *klass)
 }
 
 /* 'private' */
+
+static gboolean focus_loss_cb (GtkWidget *widget, GdkEvent *e, gpointer data)
+{
+  gtk_widget_hide(widget);
+  return FALSE;
+}
 
 gint _app_menu_sort_func(GtkListBoxRow *a, GtkListBoxRow *b, gpointer data)
 {
@@ -256,7 +262,7 @@ cade_app_menu_init (CadeAppMenu *self)
   gtk_grid_attach(GTK_GRID(grid), scrollBox, 0, 0, 3, 2);
 
 
-
+  g_signal_connect(self, "focus-out-event", G_CALLBACK(focus_loss_cb), NULL);
 
   gtk_widget_realize(GTK_WIDGET(self));
   gtk_window_move(GTK_WINDOW(self), 0, 1920 - gdk_window_get_height(gtk_widget_get_window(GTK_WIDGET(self)))); // TODO: DYNAMIC
