@@ -3,7 +3,7 @@
 * @Date:   23-09-2016 19:09:43
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   mame98
-* @Last modified time: 23-09-2016 20:09:76
+* @Last modified time: 02-10-2016 15:10:25
 * @License: MIT
 */
 
@@ -31,6 +31,7 @@ GType       cade_app_row_get_type (void) G_GNUC_CONST;
 CadeAppRow *cade_app_row_new (gboolean tooltip, gchar *name, gchar *icon, gchar *description, gchar *version, gchar *exec);
 gchar      *cade_app_row_get_name(CadeAppRow *row);
 void        cade_app_row_make_bold(CadeAppRow *row);
+void        cade_app_row_execute(CadeAppRow *row);
 
 G_END_DECLS
 

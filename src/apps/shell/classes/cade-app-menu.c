@@ -3,7 +3,7 @@
 * @Date:   22-09-2016 15:09:62
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   mame98
-* @Last modified time: 01-10-2016 14:10:32
+* @Last modified time: 02-10-2016 15:10:63
 * @License: MIT
 */
 
@@ -49,6 +49,7 @@ cade_app_menu_class_init (CadeAppMenuClass *klass)
 
 static gboolean focus_loss_cb (GtkWidget *widget, GdkEvent *e, gpointer data)
 {
+  cade_app_menu_revert(CADE_APP_MENU(widget));
   gtk_widget_hide(widget);
   return FALSE;
 }
@@ -144,6 +145,10 @@ void app_activated (GtkListBox *box, GtkListBoxRow *row, CadeAppMenu *menu)
       iter = iter->next;
     }
     gtk_list_box_prepend(GTK_LIST_BOX(menu->list), GTK_WIDGET(menu->back));
+  }
+  else
+  {
+    cade_app_row_execute(CADE_APP_ROW(row));
   }
 
   gtk_widget_show_all(GTK_WIDGET(box));
