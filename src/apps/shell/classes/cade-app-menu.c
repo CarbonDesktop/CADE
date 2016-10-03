@@ -68,8 +68,22 @@ static gboolean _app_menu_filter_func(GtkListBoxRow *row, gpointer data)
 
   CadeAppRow *crow = CADE_APP_ROW(row);
 
-  return g_regex_match(matcher, cade_app_row_get_name(crow), 0, NULL);
+  gchar *name = cade_app_row_get_name(crow);
+    if(name != NULL)
+      if(g_regex_match(matcher, name, 0, NULL))
+        return TRUE;
 
+  gchar *exec = cade_app_row_get_exec(crow);
+    if(exec != NULL)
+      if(g_regex_match(matcher, exec, 0, NULL))
+        return TRUE;
+
+  gchar *desc = cade_app_row_get_desc(crow);
+  if(desc != NULL)
+    if(g_regex_match(matcher, desc, 0, NULL))
+      return TRUE;
+
+  return FALSE;
 }
 
 static gint _app_menu_sort_func(GtkListBoxRow *a, GtkListBoxRow *b, gpointer data)

@@ -82,6 +82,16 @@ gchar *cade_app_row_get_name(CadeAppRow *row)
   return row->name;
 }
 
+gchar *cade_app_row_get_exec(CadeAppRow *row)
+{
+  return row->exec;
+}
+
+gchar *cade_app_row_get_desc(CadeAppRow *row)
+{
+  return row->description;
+}
+
 void cade_app_row_make_bold(CadeAppRow *row)
 {
   gchar *temp = g_strdup_printf("<span size='x-large'>%s</span>", row->name);

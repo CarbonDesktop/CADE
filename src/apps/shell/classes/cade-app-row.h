@@ -30,6 +30,8 @@ typedef struct _CadeAppRowClass   CadeAppRowClass;
 GType       cade_app_row_get_type (void) G_GNUC_CONST;
 CadeAppRow *cade_app_row_new (gboolean tooltip, gchar *name, gchar *icon, gchar *description, gchar *version, gchar *exec);
 gchar      *cade_app_row_get_name(CadeAppRow *row);
+gchar      *cade_app_row_get_exec(CadeAppRow *row);
+gchar      *cade_app_row_get_desc(CadeAppRow *row);
 void        cade_app_row_make_bold(CadeAppRow *row);
 void        cade_app_row_execute(CadeAppRow *row);
 
