@@ -18,7 +18,8 @@
 enum APP_MENU_MODE
 {
   MODE_START = 0,
-  MODE_DETAIL
+  MODE_DETAIL,
+  MODE_SEARCH
 };
 
 struct _CadeAppMenu {
@@ -154,6 +155,34 @@ void app_activated (GtkListBox *box, GtkListBoxRow *row, CadeAppMenu *menu)
   gtk_widget_show_all(GTK_WIDGET(box));
 }
 
+static gboolean toggle_search(GtkWidget *w, GdkEvent *e, CadeAppMenu *menu)
+{
+  if(strlen(gtk_entry_get_text(GTK_ENTRY(w))) == 0)
+  {
+    cade_app_menu_revert(menu);
+  }
+  else if(menu->mode != MODE_SEARCH)
+  {
+    menu->mode = MODE_SEARCH;
+    clear_list(GTK_LIST_BOX(menu->list));
+    GList *lists = g_hash_table_get_values(menu->categories);
+    GList *listIter = lists;
+    while(listIter != NULL)
+    {
+      GList *l = listIter->data;
+      listIter = listIter->next;
+      GList *iter = l;
+      while(iter != NULL)
+      {
+        gtk_list_box_prepend(GTK_LIST_BOX(menu->list), GTK_WIDGET(iter->data));
+        iter = iter->next;
+      }
+    }
+    gtk_widget_show_all(GTK_WIDGET(menu));
+  }
+  return FALSE;
+}
+
 
 /* 'public' */
 
@@ -268,6 +297,7 @@ cade_app_menu_init (CadeAppMenu *self)
 
 
   g_signal_connect(self, "focus-out-event", G_CALLBACK(focus_loss_cb), NULL);
+  g_signal_connect(self->search, "key-press-event", G_CALLBACK(toggle_search), self);
 
   gtk_widget_realize(GTK_WIDGET(self));
   gtk_window_move(GTK_WINDOW(self), 0, 1920 - gdk_window_get_height(gtk_widget_get_window(GTK_WIDGET(self)))); // TODO: DYNAMIC
