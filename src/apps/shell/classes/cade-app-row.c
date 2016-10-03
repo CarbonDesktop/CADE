@@ -48,7 +48,7 @@ static void finalize(CadeAppRow *self)
   gtk_box_pack_start(b, gtk_image_new_from_icon_name(self->icon, GTK_ICON_SIZE_LARGE_TOOLBAR), FALSE, FALSE, 0);
 
   self->label = gtk_label_new(self->name);
-  gtk_box_pack_end(b, self->label, FALSE, FALSE, 0);
+  gtk_box_pack_start(b, self->label, FALSE, FALSE, 20);
 
   gtk_container_add(GTK_CONTAINER(self), box);
 
