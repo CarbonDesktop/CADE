@@ -172,7 +172,7 @@ void app_activated (GtkListBox *box, GtkListBoxRow *row, CadeAppMenu *menu)
   gtk_widget_show_all(GTK_WIDGET(box));
 }
 
-static gboolean toggle_search(GtkWidget *w, GdkEvent *e, CadeAppMenu *menu)
+static gboolean toggle_search(GtkSearchEntry *w, CadeAppMenu *menu)
 {
   if(strlen(gtk_entry_get_text(GTK_ENTRY(w))) == 0)
   { // Revert to base mode
@@ -319,7 +319,7 @@ cade_app_menu_init (CadeAppMenu *self)
 
 
   g_signal_connect(self, "focus-out-event", G_CALLBACK(focus_loss_cb), NULL);
-  g_signal_connect(self->search, "key-press-event", G_CALLBACK(toggle_search), self);
+  g_signal_connect(self->search, "search-changed", G_CALLBACK(toggle_search), self);
 
   gtk_widget_realize(GTK_WIDGET(self));
   gtk_window_move(GTK_WINDOW(self), 0, 1920 - gdk_window_get_height(gtk_widget_get_window(GTK_WIDGET(self)))); // TODO: DYNAMIC
