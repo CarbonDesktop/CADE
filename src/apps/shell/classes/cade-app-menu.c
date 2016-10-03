@@ -18,7 +18,8 @@
 enum APP_MENU_MODE
 {
   MODE_START = 0,
-  MODE_DETAIL
+  MODE_DETAIL,
+  MODE_SEARCH
 };
 
 struct _CadeAppMenu {
@@ -54,7 +55,38 @@ static gboolean focus_loss_cb (GtkWidget *widget, GdkEvent *e, gpointer data)
   return FALSE;
 }
 
-gint _app_menu_sort_func(GtkListBoxRow *a, GtkListBoxRow *b, gpointer data)
+static gboolean _app_menu_filter_func(GtkListBoxRow *row, gpointer data)
+{
+  CadeAppMenu *menu = CADE_APP_MENU(data);
+  if(menu->mode != MODE_SEARCH)
+    return TRUE;
+
+  const gchar *pattern = gtk_entry_get_text(GTK_ENTRY(menu->search));
+  GRegex *matcher = g_regex_new(pattern, G_REGEX_CASELESS, 0, NULL);
+  if(!matcher)
+    return FALSE;
+
+  CadeAppRow *crow = CADE_APP_ROW(row);
+
+  gchar *name = cade_app_row_get_name(crow);
+    if(name != NULL)
+      if(g_regex_match(matcher, name, 0, NULL))
+        return TRUE;
+
+  gchar *exec = cade_app_row_get_exec(crow);
+    if(exec != NULL)
+      if(g_regex_match(matcher, exec, 0, NULL))
+        return TRUE;
+
+  gchar *desc = cade_app_row_get_desc(crow);
+  if(desc != NULL)
+    if(g_regex_match(matcher, desc, 0, NULL))
+      return TRUE;
+
+  return FALSE;
+}
+
+static gint _app_menu_sort_func(GtkListBoxRow *a, GtkListBoxRow *b, gpointer data)
 {
   CadeAppMenu *menu = CADE_APP_MENU(data);
   if(a == NULL || b == GTK_LIST_BOX_ROW(menu->back))
@@ -154,6 +186,38 @@ void app_activated (GtkListBox *box, GtkListBoxRow *row, CadeAppMenu *menu)
   gtk_widget_show_all(GTK_WIDGET(box));
 }
 
+static gboolean toggle_search(GtkSearchEntry *w, CadeAppMenu *menu)
+{
+  if(strlen(gtk_entry_get_text(GTK_ENTRY(w))) == 0)
+  { // Revert to base mode
+    cade_app_menu_revert(menu);
+  }
+  else if(menu->mode != MODE_SEARCH)
+  { // Load search mode
+    menu->mode = MODE_SEARCH;
+    clear_list(GTK_LIST_BOX(menu->list));
+    GList *lists = g_hash_table_get_values(menu->categories);
+    GList *listIter = lists;
+    while(listIter != NULL)
+    {
+      GList *l = listIter->data;
+      listIter = listIter->next;
+      GList *iter = l;
+      while(iter != NULL)
+      {
+        gtk_list_box_prepend(GTK_LIST_BOX(menu->list), GTK_WIDGET(iter->data));
+        iter = iter->next;
+      }
+    }
+    gtk_widget_show_all(GTK_WIDGET(menu));
+  }
+  else
+  {
+    gtk_list_box_invalidate_filter(GTK_LIST_BOX(menu->list));
+  }
+  return FALSE;
+}
+
 
 /* 'public' */
 
@@ -178,6 +242,7 @@ cade_app_menu_init (CadeAppMenu *self)
   g_signal_connect(self->list, "row-activated", G_CALLBACK(app_activated), self);
   gtk_list_box_set_selection_mode(GTK_LIST_BOX(self->list), GTK_SELECTION_NONE);
   gtk_list_box_set_sort_func(GTK_LIST_BOX(self->list), _app_menu_sort_func, self, NULL);
+  gtk_list_box_set_filter_func(GTK_LIST_BOX(self->list), _app_menu_filter_func, self, NULL);
 
   _build_category_list(self);
 
@@ -268,6 +333,7 @@ cade_app_menu_init (CadeAppMenu *self)
 
 
   g_signal_connect(self, "focus-out-event", G_CALLBACK(focus_loss_cb), NULL);
+  g_signal_connect(self->search, "search-changed", G_CALLBACK(toggle_search), self);
 
   gtk_widget_realize(GTK_WIDGET(self));
   gtk_window_move(GTK_WINDOW(self), 0, 1920 - gdk_window_get_height(gtk_widget_get_window(GTK_WIDGET(self)))); // TODO: DYNAMIC
