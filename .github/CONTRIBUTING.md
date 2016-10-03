@@ -30,3 +30,5 @@ and open a new one.
 
 The only thing that could be tricky for new linux users is that you need to submit system information called
 `uname -a`. You can get this by simply opening a terminal and calling `uname -a` and copy the output.
+
+# Once Again: **THANK YOU!**
