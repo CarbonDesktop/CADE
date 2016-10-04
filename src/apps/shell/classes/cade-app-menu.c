@@ -3,7 +3,7 @@
 * @Date:   22-09-2016 15:09:62
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   mame98
-* @Last modified time: 04-10-2016 18:10:65
+* @Last modified time: 04-10-2016 18:10:40
 * @License: MIT
 */
 
@@ -327,6 +327,12 @@ cade_app_menu_init (CadeAppMenu *self)
   app_activated(GTK_LIST_BOX(self->list), GTK_LIST_BOX_ROW(self->back), self);
 
   load_apps_from_dir(self, "/usr/share/applications/");
+  load_apps_from_dir(self, "/usr/local/share/applications/");
+
+  const gchar *home = g_get_home_dir();
+  gchar *home_conf = g_strdup_printf("%s/.local/share/applications/", home);
+  load_apps_from_dir(self, home_conf);
+  g_free(home_conf);
 
   gtk_container_add(GTK_CONTAINER(scrollBox), self->list);
   gtk_grid_attach(GTK_GRID(grid), scrollBox, 0, 0, 3, 2);
