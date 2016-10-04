@@ -3,7 +3,7 @@
 * @Date:   22-09-2016 15:09:62
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   mame98
-* @Last modified time: 02-10-2016 15:10:63
+* @Last modified time: 04-10-2016 18:10:65
 * @License: MIT
 */
 
@@ -218,45 +218,14 @@ static gboolean toggle_search(GtkSearchEntry *w, CadeAppMenu *menu)
   return FALSE;
 }
 
-
-/* 'public' */
-
-static void
-cade_app_menu_init (CadeAppMenu *self)
+static void load_apps_from_dir(CadeAppMenu *self, gchar *path)
 {
-  gtk_window_set_skip_taskbar_hint(GTK_WINDOW(self), TRUE);
-  gtk_window_set_decorated(GTK_WINDOW(self), FALSE);
-  gtk_container_set_border_width(GTK_CONTAINER(self), 12);
-
-  GtkWidget *grid = gtk_grid_new();
-  gtk_container_add(GTK_CONTAINER(self), grid);
-
-  self->search = gtk_search_entry_new();
-  gtk_grid_attach(GTK_GRID(grid), self->search, 0,2, 3, 1);
-
-  GtkWidget *scrollBox = gtk_scrolled_window_new(NULL, NULL);
-  gtk_scrolled_window_set_min_content_height(GTK_SCROLLED_WINDOW(scrollBox), 500);
-  gtk_scrolled_window_set_min_content_width(GTK_SCROLLED_WINDOW(scrollBox), 450);
-  self->list = gtk_list_box_new();
-  self->mode = MODE_START;
-  g_signal_connect(self->list, "row-activated", G_CALLBACK(app_activated), self);
-  gtk_list_box_set_selection_mode(GTK_LIST_BOX(self->list), GTK_SELECTION_NONE);
-  gtk_list_box_set_sort_func(GTK_LIST_BOX(self->list), _app_menu_sort_func, self, NULL);
-  gtk_list_box_set_filter_func(GTK_LIST_BOX(self->list), _app_menu_filter_func, self, NULL);
-
-  _build_category_list(self);
-
-
-  app_activated(GTK_LIST_BOX(self->list), GTK_LIST_BOX_ROW(self->back), self);
-
-
-
-  GDir *dir = g_dir_open("/usr/share/applications/", 0, NULL);
+  GDir *dir = g_dir_open(path, 0, NULL);
   const gchar *file;
 
   while((file = g_dir_read_name(dir)) != NULL )
   {
-    gchar *full_path = g_strdup_printf("/usr/share/applications/%s", file);
+    gchar *full_path = g_strdup_printf("%s%s", path, file);
     GKeyFile *keyfile = g_key_file_new();
     g_key_file_load_from_file(keyfile, full_path, G_KEY_FILE_NONE, NULL);
 
@@ -325,8 +294,39 @@ cade_app_menu_init (CadeAppMenu *self)
     g_key_file_unref(keyfile);
     g_free(full_path);
   }
+}
+
+/* 'public' */
+
+static void
+cade_app_menu_init (CadeAppMenu *self)
+{
+  gtk_window_set_skip_taskbar_hint(GTK_WINDOW(self), TRUE);
+  gtk_window_set_decorated(GTK_WINDOW(self), FALSE);
+  gtk_container_set_border_width(GTK_CONTAINER(self), 12);
+
+  GtkWidget *grid = gtk_grid_new();
+  gtk_container_add(GTK_CONTAINER(self), grid);
+
+  self->search = gtk_search_entry_new();
+  gtk_grid_attach(GTK_GRID(grid), self->search, 0,2, 3, 1);
+
+  GtkWidget *scrollBox = gtk_scrolled_window_new(NULL, NULL);
+  gtk_scrolled_window_set_min_content_height(GTK_SCROLLED_WINDOW(scrollBox), 500);
+  gtk_scrolled_window_set_min_content_width(GTK_SCROLLED_WINDOW(scrollBox), 450);
+  self->list = gtk_list_box_new();
+  self->mode = MODE_START;
+  g_signal_connect(self->list, "row-activated", G_CALLBACK(app_activated), self);
+  gtk_list_box_set_selection_mode(GTK_LIST_BOX(self->list), GTK_SELECTION_NONE);
+  gtk_list_box_set_sort_func(GTK_LIST_BOX(self->list), _app_menu_sort_func, self, NULL);
+  gtk_list_box_set_filter_func(GTK_LIST_BOX(self->list), _app_menu_filter_func, self, NULL);
+
+  _build_category_list(self);
 
 
+  app_activated(GTK_LIST_BOX(self->list), GTK_LIST_BOX_ROW(self->back), self);
+
+  load_apps_from_dir(self, "/usr/share/applications/");
 
   gtk_container_add(GTK_CONTAINER(scrollBox), self->list);
   gtk_grid_attach(GTK_GRID(grid), scrollBox, 0, 0, 3, 2);
