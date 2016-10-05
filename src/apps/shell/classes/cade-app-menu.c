@@ -2,8 +2,8 @@
 * @Author: Marius Messerschmidt <mame98>
 * @Date:   22-09-2016 15:09:62
 * @Email:  marius.messerschmidt@googlemail.com
-* @Last modified by:   mame98
-* @Last modified time: 04-10-2016 18:10:40
+* @Last modified by:   marius
+* @Last modified time: 05-10-2016 17:10:72
 * @License: MIT
 */
 
@@ -342,7 +342,7 @@ cade_app_menu_init (CadeAppMenu *self)
   g_signal_connect(self->search, "search-changed", G_CALLBACK(toggle_search), self);
 
   gtk_widget_realize(GTK_WIDGET(self));
-  gtk_window_move(GTK_WINDOW(self), 0, 1920 - gdk_window_get_height(gtk_widget_get_window(GTK_WIDGET(self)))); // TODO: DYNAMIC
+  gtk_window_move(GTK_WINDOW(self), 0, gdk_screen_get_height(gdk_screen_get_default()) - gdk_window_get_height(gtk_widget_get_window(GTK_WIDGET(self)))); // TODO: DYNAMIC
 }
 
 CadeAppMenu *
