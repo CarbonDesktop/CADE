@@ -3,10 +3,14 @@
 @Date:   08-10-2016 20:10:88
 @Email:  marius.messerschmidt@googlemail.com
 @Last modified by:   marius
-@Last modified time: 08-10-2016 20:10:25
+@Last modified time: 08-10-2016 21:10:00
 @License: MIT
 -->
 
+[![Github All Releases](https://img.shields.io/github/downloads/CarbonDesktop/CADE/total.svg?maxAge=2592000)]()
+[![GitHub release](https://img.shields.io/github/release/CarbonDesktop/CADE.svg?maxAge=2592000)]()
+[![GitHub issues](https://img.shields.io/github/issues/CarbonDesktop/CADE.svg?maxAge=2592000)]()
+[![license](https://img.shields.io/github/license/CarbonDesktop/CADE.svg?maxAge=2592000)]()
 
 ### Builds
 | Branch  | Build |
