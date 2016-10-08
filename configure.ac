@@ -15,7 +15,6 @@ PKG_CHECK_MODULES(GLib, glib-2.0)
 PKG_CHECK_MODULES(GObject, gobject-2.0)
 
 
-
 # Files
 AC_CONFIG_HEADERS([src/config.h])#
 AC_CONFIG_FILES([
@@ -25,6 +24,13 @@ AC_CONFIG_FILES([
   src/apps/shell/Makefile
   ])
 
+
+# Check for optional programs
+AC_CHECK_PROGS(CPPCHECK, cppcheck)
+if test -z "$CPPCHECK";
+  then AC_MSG_WARN([cppcheck not found, unable to perform static code checks])
+fi
+AM_CONDITIONAL([HAVE_CPPCHECK], [test "$CPPCHECK" != ""])
 
 # Done with build script
 AC_OUTPUT
