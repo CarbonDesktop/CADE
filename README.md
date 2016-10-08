@@ -1,3 +1,23 @@
+<!--
+@Author: Marius Messerschmidt <marius>
+@Date:   08-10-2016 20:10:88
+@Email:  marius.messerschmidt@googlemail.com
+@Last modified by:   marius
+@Last modified time: 08-10-2016 20:10:25
+@License: MIT
+-->
+
+
+### Builds
+| Branch  | Build |
+|---------|-------|
+| `master`| [![Build Status](https://travis-ci.org/CarbonDesktop/CADE.svg?branch=master)](https://travis-ci.org/CarbonDesktop/CADE)
+
+ > Our current Development happens on the master branch, this will change as soon as we
+ > have a (stable or unstable) release.
+
+------------------------------------------
+
 # Carbon Desktop
 
 The Carbon Desktop (short CADE) is a simple Desktop Environment written
