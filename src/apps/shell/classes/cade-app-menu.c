@@ -3,7 +3,7 @@
 * @Date:   22-09-2016 15:09:62
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 05-10-2016 17:10:72
+* @Last modified time: 08-10-2016 11:10:74
 * @License: MIT
 */
 
@@ -336,7 +336,6 @@ cade_app_menu_init (CadeAppMenu *self)
 
   gtk_container_add(GTK_CONTAINER(scrollBox), self->list);
   gtk_grid_attach(GTK_GRID(grid), scrollBox, 0, 0, 3, 2);
-
 
   g_signal_connect(self, "focus-out-event", G_CALLBACK(focus_loss_cb), NULL);
   g_signal_connect(self->search, "search-changed", G_CALLBACK(toggle_search), self);

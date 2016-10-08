@@ -26,6 +26,9 @@ Makefile
 .deps/
 .dirstamp
 
+*.trs
+test-driver
+
 # C files
 *.o
 
