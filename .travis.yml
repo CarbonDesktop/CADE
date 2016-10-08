@@ -1,0 +1,18 @@
+# @Author: Marius Messerschmidt <marius>
+# @Date:   08-10-2016 11:10:24
+# @Email:  marius.messerschmidt@googlemail.com
+# @Last modified by:   marius
+# @Last modified time: 08-10-2016 11:10:41
+# @License: MIT
+language: c
+sudo: false
+
+script: ./autogen.sh && ./configure && make && make check
+
+addons:
+  apt:
+    packages:
+      - cppcheck
+
+after_failure:
+  - find . -name "*.log" -exec cat {} +
