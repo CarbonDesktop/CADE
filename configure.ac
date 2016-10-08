@@ -13,9 +13,11 @@ AC_PROG_CC
 if test "$CI" == ""; # This is a crap fix for travis during static analysis
 then
   PKG_CHECK_MODULES(GTK3, gtk+-3.0 >= 3.12)
+else
+  PKG_CHECK_MODULES(GTK3, gtk+-3.0)
+fi
   PKG_CHECK_MODULES(GLib, glib-2.0)
   PKG_CHECK_MODULES(GObject, gobject-2.0)
-fi
 
 # Files
 AC_CONFIG_HEADERS([src/config.h])#
