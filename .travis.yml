@@ -2,18 +2,16 @@
 # @Date:   08-10-2016 11:10:24
 # @Email:  marius.messerschmidt@googlemail.com
 # @Last modified by:   marius
-# @Last modified time: 08-10-2016 11:10:47
+# @Last modified time: 08-10-2016 11:10:94
 # @License: MIT
 language: c
-sudo: false
+sudo: required # This is not good...
 
 script: ./autogen.sh && ./configure && make && make check
 
-addons:
-  apt:
-    packages:
-      - cppcheck
-      - libgtk-3-dev
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq libgtk-3-dev
 
 after_failure:
   - find . -name "*.log" -exec cat {} +
