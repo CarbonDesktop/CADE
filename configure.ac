@@ -15,7 +15,7 @@ PKG_CHECK_MODULES(GLib, glib-2.0)
 PKG_CHECK_MODULES(GObject, gobject-2.0)
 
 # Files
-AC_CONFIG_HEADERS([src/config.h])#
+AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_FILES([
   Makefile
   src/Makefile
