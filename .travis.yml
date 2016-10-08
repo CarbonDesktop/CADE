@@ -2,7 +2,7 @@
 # @Date:   08-10-2016 11:10:24
 # @Email:  marius.messerschmidt@googlemail.com
 # @Last modified by:   marius
-# @Last modified time: 08-10-2016 11:10:62
+# @Last modified time: 08-10-2016 11:10:20
 # @License: MIT
 language: c
 sudo: false
@@ -12,6 +12,7 @@ addons:
   apt:
     packages:
       - cppcheck
+      - libgtk-3-dev
 
 
 after_failure:
