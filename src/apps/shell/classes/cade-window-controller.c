@@ -3,12 +3,13 @@
 * @Date:   08-10-2016 21:10:30
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 09-10-2016 13:10:80
+* @Last modified time: 09-10-2016 16:10:75
 * @License: MIT
 */
 
 #include <config.h>
 #include "cade-window-controller.h"
+#include "cade-app-window.h"
 #include <gtk/gtk.h>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
@@ -58,10 +59,8 @@ GList *cade_window_controller_get_all_windows(CadeWindowController *controller)
     return NULL;
   }
 
-  g_print("len:%ld", len);
-
   Window *realList = (Window*) list;
-
+  GList *ret = NULL;
   for (unsigned long x = 0; x < len; x++)
   {
     /*  Now, we have the windows and we need to fetch all the meta data
@@ -85,6 +84,11 @@ GList *cade_window_controller_get_all_windows(CadeWindowController *controller)
      }
 
      name = (char *) nameRaw;
-     g_warning("Found %s", name);
+
+     /* Now, build the list with objects */
+     CadeAppWindow *win = cade_app_window_new(w, name);
+     ret = g_list_append(ret, win);
+
   }
+  return ret;
 }
