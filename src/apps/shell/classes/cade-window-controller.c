@@ -3,7 +3,7 @@
 * @Date:   08-10-2016 21:10:30
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 09-10-2016 12:10:60
+* @Last modified time: 09-10-2016 13:10:80
 * @License: MIT
 */
 
@@ -60,22 +60,22 @@ GList *cade_window_controller_get_all_windows(CadeWindowController *controller)
 
   g_print("len:%ld", len);
 
+  Window *realList = (Window*) list;
+
   for (unsigned long x = 0; x < len; x++)
   {
     /*  Now, we have the windows and we need to fetch all the meta data
      *  and then save all this stuff into a new GObject store, connect it
      *  as a list and then return it to the request
      */
-     Window w = list[x];
-     g_warning("%ld", x);
-
+     Window w = realList[x];
      Atom nameAtom = XInternAtom(d, "_NET_WM_NAME", False);
      Atom nameType;
-     char *name;
+     char *name;               // Name of the window (title)
      int nameForm;             // Unused
-     unsigned long nameLen;
+     unsigned long nameLen;    // Length of the returned name
      unsigned long nameRemain; // Unused
-     unsigned char *nameRaw;
+     unsigned char *nameRaw;   // 'Raw' return location for the name
 
 
      if(Success != XGetWindowProperty(d, w, nameAtom, 0, 1024, False, AnyPropertyType, &nameType,&nameForm,&nameLen,&nameRemain,&nameRaw))
