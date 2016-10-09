@@ -3,13 +3,15 @@
 * @Date:   08-10-2016 21:10:30
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 08-10-2016 21:10:44
+* @Last modified time: 09-10-2016 12:10:60
 * @License: MIT
 */
 
 #include <config.h>
 #include "cade-window-controller.h"
 #include <gtk/gtk.h>
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
 
 struct _CadeWindowController {
   GObject parent_instance;
@@ -40,15 +42,49 @@ cade_window_controller_new ()
 
 GList *cade_window_controller_get_all_windows(CadeWindowController *controller)
 {
-  GdkAtom prop = gdk_atom_intern("_NET_CLIENT_LIST", FALSE);
+  Display *d = XOpenDisplay(NULL);
+  Atom clientListAtom = XInternAtom(d, "_NET_CLIENT_LIST", False);
+  Atom type;
 
-  GdkAtom type;
-  gint format, length;
-  guchar *data;
-  gdk_property_get(controller->window, prop, GDK_NONE, 0, 1024, FALSE, &type, &format, &length, &data);
-  g_warning("N: %d", length);
-  for(gint x = 0; x < length; x++)
+  int form;             // Unused
+  unsigned long len;    // Lenght of the returned list
+  unsigned char *list;  // List with all X11 Windows
+  unsigned long remain; // Unused
+
+
+  if(Success != XGetWindowProperty(d, XDefaultRootWindow(d), clientListAtom, 0, 1024, False, XA_WINDOW, &type, &form, &len, &remain, &list))
   {
-    g_print("Found window with ID:%d\n", data[x]);
+    g_warning("Could not fetch open windows from X server");
+    return NULL;
+  }
+
+  g_print("len:%ld", len);
+
+  for (unsigned long x = 0; x < len; x++)
+  {
+    /*  Now, we have the windows and we need to fetch all the meta data
+     *  and then save all this stuff into a new GObject store, connect it
+     *  as a list and then return it to the request
+     */
+     Window w = list[x];
+     g_warning("%ld", x);
+
+     Atom nameAtom = XInternAtom(d, "_NET_WM_NAME", False);
+     Atom nameType;
+     char *name;
+     int nameForm;             // Unused
+     unsigned long nameLen;
+     unsigned long nameRemain; // Unused
+     unsigned char *nameRaw;
+
+
+     if(Success != XGetWindowProperty(d, w, nameAtom, 0, 1024, False, AnyPropertyType, &nameType,&nameForm,&nameLen,&nameRemain,&nameRaw))
+     {
+        g_warning("Could not get name of window with id %ld", w);
+        continue;
+     }
+
+     name = (char *) nameRaw;
+     g_warning("Found %s", name);
   }
 }
