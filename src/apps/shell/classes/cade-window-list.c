@@ -3,7 +3,7 @@
 * @Date:   12-10-2016 09:10:48
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 12-10-2016 10:10:97
+* @Last modified time: 12-10-2016 10:10:38
 * @License: MIT
 */
 
@@ -56,7 +56,7 @@ static gboolean _cade_window_list_refresh_windows(gpointer list)
     if(!alreadyInList)
     {
       CadeWindowListElement *element = cade_window_list_element_new(title, id);
-      gtk_box_pack_start(GTK_BOX(self), GTK_WIDGET(element), FALSE, FALSE, 0);
+      gtk_box_pack_start(GTK_BOX(self), GTK_WIDGET(element), FALSE, TRUE, 0);
     }
     iter = iter->next;
   }
@@ -109,5 +109,5 @@ static void cade_window_list_init (CadeWindowList *self)
 CadeWindowList *
 cade_window_list_new (void)
 {
-  return g_object_new (CADE_TYPE_WINDOW_LIST, "orientation", GTK_ORIENTATION_HORIZONTAL, NULL);
+  return g_object_new (CADE_TYPE_WINDOW_LIST, "homogeneous", TRUE, "orientation", GTK_ORIENTATION_HORIZONTAL, NULL);
 }

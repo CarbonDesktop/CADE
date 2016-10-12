@@ -3,7 +3,7 @@
 * @Date:   14-09-2016 18:09:31
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 12-10-2016 09:10:36
+* @Last modified time: 12-10-2016 10:10:92
 * @License: MIT
 */
 
@@ -32,6 +32,13 @@ cade_panel_window_class_init (CadePanelWindowClass *klass)
 {
 }
 
+static gboolean _cade_panel_window_ensure_size(gpointer data)
+{
+  CadePanelWindow *self = CADE_PANEL_WINDOW(data);
+  gtk_window_resize(GTK_WINDOW(self), gdk_screen_get_width(self->screen), 30);
+  return G_SOURCE_CONTINUE;
+}
+
 static void
 cade_panel_window_init (CadePanelWindow *self)
 {
@@ -57,7 +64,6 @@ cade_panel_window_init (CadePanelWindow *self)
 
   GdkAtom atom = gdk_atom_intern("_NET_WM_STRUT", FALSE);
   GdkAtom card = gdk_atom_intern("CARDINAL", FALSE);
-
   gdk_property_change(gdkWindow, atom, card, 32, GDK_PROP_MODE_REPLACE, (guchar *)vals, 4);
 
   self->box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
@@ -65,6 +71,8 @@ cade_panel_window_init (CadePanelWindow *self)
 
   gtk_box_pack_start(GTK_BOX(self->box), GTK_WIDGET(cade_app_menu_button_new()), FALSE, FALSE, 0);
   gtk_box_pack_start(GTK_BOX(self->box), GTK_WIDGET(cade_window_list_new()), FALSE, FALSE, 0);
+
+  g_timeout_add(100, _cade_panel_window_ensure_size, self);
 
   self->windowController = cade_window_controller_new();
   cade_window_controller_get_all_windows(self->windowController);
