@@ -3,7 +3,7 @@
 * @Date:   08-10-2016 21:10:30
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 12-10-2016 10:10:44
+* @Last modified time: 12-10-2016 11:10:56
 * @License: MIT
 */
 
@@ -92,4 +92,29 @@ GList *cade_window_controller_get_all_windows(CadeWindowController *controller)
   }
   XCloseDisplay(d);
   return ret;
+}
+
+guint cade_window_controller_get_active_id(CadeWindowController *controller)
+{
+  Display *d = XOpenDisplay(NULL);
+  Atom activeAtom = XInternAtom(d, "_NET_ACTIVE_WINDOW", False);
+  Atom type;
+
+  int form;             // Unused
+  unsigned long len;    // length of ret;
+  unsigned char *ret;   // Return for Window ID
+  unsigned long remain; // Unused
+
+  if(Success != XGetWindowProperty(d, XDefaultRootWindow(d), activeAtom, 0, 1024, False, XA_WINDOW, &type, &form, &len, &remain, &ret))
+  {
+    g_warning("Could not fetch active window from X-Server");
+    return 0;
+  }
+
+  Window *realList = (Window*) ret;
+  guint id = (Window) realList[0];
+
+
+  XCloseDisplay(d);
+  return id;
 }

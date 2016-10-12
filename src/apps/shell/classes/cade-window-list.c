@@ -3,7 +3,7 @@
 * @Date:   12-10-2016 09:10:48
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 12-10-2016 10:10:38
+* @Last modified time: 12-10-2016 11:10:02
 * @License: MIT
 */
 
@@ -33,6 +33,8 @@ static gboolean _cade_window_list_refresh_windows(gpointer list)
   GList *existing = gtk_container_get_children(GTK_CONTAINER(self));
   GList *existingIter;
   GList *iter = windows;
+
+  guint activeWindow = cade_window_controller_get_active_id(self->controller);
 
   while(iter != NULL)
   {
@@ -79,6 +81,7 @@ static gboolean _cade_window_list_refresh_windows(gpointer list)
         stillThere = TRUE;
         gchar *title = cade_app_window_get_name(win);
         cade_window_list_element_set_label(CADE_WINDOW_LIST_ELEMENT(existingIter->data), title);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(existingIter->data), existingID == activeWindow);
         break;
       }
       iter = iter->next;
