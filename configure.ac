@@ -14,6 +14,9 @@ PKG_CHECK_MODULES(GTK3, gtk+-3.0 >= 3.12)
 PKG_CHECK_MODULES(GLib, glib-2.0)
 PKG_CHECK_MODULES(GObject, gobject-2.0)
 
+# X Server
+PKG_CHECK_MODULES(X11, x11)
+
 # Files
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_FILES([

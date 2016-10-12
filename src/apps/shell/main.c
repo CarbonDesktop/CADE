@@ -9,8 +9,8 @@
 * @Author: Marius Messerschmidt <mame98>
 * @Date:   13-09-2016 19:09:68
 * @Email:  marius.messerschmidt@googlemail.com
-* @Last modified by:   mame98
-* @Last modified time: 22-09-2016 15:09:24
+* @Last modified by:   marius
+* @Last modified time: 12-10-2016 09:10:17
 * @License: MIT
 */
 #include <stdio.h>
