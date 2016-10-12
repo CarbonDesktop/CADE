@@ -3,7 +3,7 @@
 * @Date:   12-10-2016 09:10:48
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 12-10-2016 13:10:29
+* @Last modified time: 12-10-2016 13:10:28
 * @License: MIT
 */
 
@@ -42,7 +42,7 @@ static gboolean _cade_window_list_refresh_windows(gpointer list)
     gchar *title = cade_app_window_get_name(win);
     gboolean alreadyInList = FALSE;
 
-    if(strcmp(title, "cade-shell") == 0)
+    if(g_strcmp0(title, "cade-shell") == 0)
       alreadyInList = TRUE;
     guint id = cade_app_window_get_id(win);
 
@@ -63,6 +63,7 @@ static gboolean _cade_window_list_refresh_windows(gpointer list)
       CadeWindowListElement *element = cade_window_list_element_new(title, id);
       gtk_box_pack_start(GTK_BOX(self), GTK_WIDGET(element), FALSE, TRUE, 0);
     }
+    g_free(title);
     iter = iter->next;
   }
 
@@ -85,6 +86,7 @@ static gboolean _cade_window_list_refresh_windows(gpointer list)
         gchar *title = cade_app_window_get_name(win);
         cade_window_list_element_set_label(CADE_WINDOW_LIST_ELEMENT(existingIter->data), title);
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(existingIter->data), existingID == activeWindow);
+        g_free(title);
         break;
       }
       iter = iter->next;
