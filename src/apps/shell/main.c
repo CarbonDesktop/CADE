@@ -10,11 +10,11 @@
 * @Date:   13-09-2016 19:09:68
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 12-10-2016 09:10:17
+* @Last modified time: 12-10-2016 14:10:08
 * @License: MIT
 */
 #include <stdio.h>
-#include "classes/cade-shell-application.h"
+#include <cade-core.h>
 
 int main(int argc, char **argv)
 {
