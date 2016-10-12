@@ -3,7 +3,7 @@
 * @Date:   12-10-2016 09:10:48
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 12-10-2016 10:10:48
+* @Last modified time: 12-10-2016 10:10:97
 * @License: MIT
 */
 
@@ -61,6 +61,36 @@ static gboolean _cade_window_list_refresh_windows(gpointer list)
     iter = iter->next;
   }
 
+  existingIter = existing;
+  while(existingIter != NULL)
+  {
+    gboolean stillThere = FALSE;
+    iter = windows;
+
+    while(iter != NULL)
+    {
+      guint existingID = cade_window_list_element_get_id(CADE_WINDOW_LIST_ELEMENT(existingIter->data));
+
+      CadeAppWindow *win = CADE_APP_WINDOW(iter->data);
+      guint id = cade_app_window_get_id(win);
+
+      if(id == existingID)
+      {
+        stillThere = TRUE;
+        gchar *title = cade_app_window_get_name(win);
+        cade_window_list_element_set_label(CADE_WINDOW_LIST_ELEMENT(existingIter->data), title);
+        break;
+      }
+      iter = iter->next;
+    }
+
+    if(!stillThere)
+    {
+      gtk_widget_destroy(GTK_WIDGET(existingIter->data));
+    }
+    existingIter = existingIter->next;
+  }
+
   gtk_widget_show_all(GTK_WIDGET(self));
 
   return G_SOURCE_CONTINUE;
@@ -73,7 +103,7 @@ static void cade_window_list_class_init (CadeWindowListClass *klass)
 static void cade_window_list_init (CadeWindowList *self)
 {
   self->controller = cade_window_controller_new();
-  g_timeout_add(50, _cade_window_list_refresh_windows, self);
+  g_timeout_add(500, _cade_window_list_refresh_windows, self);
 }
 
 CadeWindowList *
