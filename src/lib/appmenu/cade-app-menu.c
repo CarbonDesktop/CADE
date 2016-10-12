@@ -3,14 +3,14 @@
 * @Date:   22-09-2016 15:09:62
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 08-10-2016 11:10:74
+* @Last modified time: 12-10-2016 15:10:77
 * @License: MIT
 */
 
 
 
 #include "cade-app-menu.h"
-#include "cade-app-row.h"
+#include <appmenu/cade-app-row.h>
 
 #include <string.h>
 

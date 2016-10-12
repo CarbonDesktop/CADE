@@ -1,6 +1,6 @@
-LIBRARIES = libcade-core.a
+lib_LTLIBRARIES = libcade-core.la
 
-libcade_core_a_HEADERS = appmenu/cade-app-menu-button.h \
+noinst_HEADERS =         appmenu/cade-app-menu-button.h \
                          appmenu/cade-app-menu.h        \
                          appmenu/cade-app-row.h         \
                          core/cade-panel-window.h       \
@@ -12,7 +12,7 @@ libcade_core_a_HEADERS = appmenu/cade-app-menu-button.h \
                          cade-core.h
 
 
-libcade_core_a_SOURCES = ppmenu/cade-app-menu-button.c  \
+libcade_core_la_SOURCES = appmenu/cade-app-menu-button.c  \
                          appmenu/cade-app-menu.c        \
                          appmenu/cade-app-row.c         \
                          core/cade-panel-window.c       \
@@ -22,5 +22,5 @@ libcade_core_a_SOURCES = ppmenu/cade-app-menu-button.c  \
                          windowlist/cade-window-list-element.c \
                          windowlist/cade-window-list.c
 
-libcade_core_a_LDADD = ${GTK3_LIBS} ${GObject_LIBS} $(X11_LIBS)
-libcade_core_a_CFLAGS = ${GTK3_CFLAGS} ${GObject_CFLAGS} $(X11_CFLAGS) -std=c99
+libcade_core_la_LIBADD = ${GTK3_LIBS} ${GObject_LIBS} $(X11_LIBS)
+libcade_core_la_CFLAGS = ${GTK3_CFLAGS} ${GObject_CFLAGS} $(X11_CFLAGS) -std=c99 -I$(top_srcdir)/src/lib/

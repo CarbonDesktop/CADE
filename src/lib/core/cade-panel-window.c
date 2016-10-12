@@ -3,14 +3,12 @@
 * @Date:   14-09-2016 18:09:31
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 12-10-2016 10:10:92
+* @Last modified time: 12-10-2016 15:10:95
 * @License: MIT
 */
 
 #include "cade-panel-window.h"
-#include "cade-app-menu-button.h"
-#include "cade-window-controller.h"
-#include "cade-window-list.h"
+#include <cade-core.h>
 #include <gtk/gtk.h>
 
 struct _CadePanelWindow {

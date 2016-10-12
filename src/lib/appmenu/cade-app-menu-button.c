@@ -2,15 +2,15 @@
 * @Author: Marius Messerschmidt <mame98>
 * @Date:   22-09-2016 15:09:02
 * @Email:  marius.messerschmidt@googlemail.com
-* @Last modified by:   mame98
-* @Last modified time: 24-09-2016 11:09:71
+* @Last modified by:   marius
+* @Last modified time: 12-10-2016 15:10:07
 * @License: MIT
 */
 
 
 
 #include "cade-app-menu-button.h"
-#include "cade-app-menu.h"
+#include <appmenu/cade-app-menu.h>
 
 struct _CadeAppMenuButton {
   GtkToggleButton parent_instance;

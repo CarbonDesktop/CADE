@@ -35,3 +35,12 @@ test-driver
 # Project
 cade-shell
 docs/
+
+ar-lib
+config.guess
+config.sub
+libtool
+ltmain.sh
+*.lo
+.libs
+*.la

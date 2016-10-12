@@ -1,6 +1,9 @@
 AC_INIT([CADE], [0.0.0], [https://github.com/CarbonDesktop/CADE/issues], [cade], [https://github.com/CarbonDesktop/CADE])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign subdir-objects])
 
+AM_PROG_AR
+AM_PROG_LIBTOOL
+
 AC_LANG(C)
 
 
@@ -23,6 +26,7 @@ AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_FILES([
   Makefile
   src/Makefile
+  src/lib/Makefile
   src/apps/Makefile
   src/apps/shell/Makefile
   ])

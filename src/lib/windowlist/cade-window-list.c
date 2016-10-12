@@ -3,15 +3,15 @@
 * @Date:   12-10-2016 09:10:48
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 12-10-2016 13:10:28
+* @Last modified time: 12-10-2016 15:10:13
 * @License: MIT
 */
 
 
 #include "cade-window-list.h"
-#include "cade-window-controller.h"
-#include "cade-window-list-element.h"
-#include "cade-app-window.h"
+#include <data/cade-window-controller.h>
+#include <windowlist/cade-window-list-element.h>
+#include <windowlist/cade-app-window.h>
 #include <gtk/gtk.h>
 
 struct _CadeWindowList {
