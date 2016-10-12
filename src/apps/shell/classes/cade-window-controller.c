@@ -3,7 +3,7 @@
 * @Date:   08-10-2016 21:10:30
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 12-10-2016 11:10:56
+* @Last modified time: 12-10-2016 11:10:11
 * @License: MIT
 */
 
@@ -117,4 +117,22 @@ guint cade_window_controller_get_active_id(CadeWindowController *controller)
 
   XCloseDisplay(d);
   return id;
+}
+
+void cade_window_controller_select_window(CadeWindowController *controller, guint id)
+{
+
+  Display *d = XOpenDisplay(NULL);
+
+  XEvent xEvent;
+  xEvent.type = ClientMessage;
+  xEvent.xclient.display = d;
+  xEvent.xclient.window = (Window) id;
+  xEvent.xclient.message_type = XInternAtom(d, "_NET_ACTIVE_WINDOW", 0);
+  xEvent.xclient.format = 32;
+  xEvent.xclient.data.l[0] = 2L;
+  xEvent.xclient.data.l[1] = CurrentTime;
+  XSendEvent(d, XDefaultRootWindow(d), 0, SubstructureNotifyMask | SubstructureRedirectMask, &xEvent);
+
+  XCloseDisplay(d);
 }

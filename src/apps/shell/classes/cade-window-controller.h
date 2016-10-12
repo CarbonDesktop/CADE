@@ -3,7 +3,7 @@
 * @Date:   08-10-2016 21:10:30
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 12-10-2016 11:10:66
+* @Last modified time: 12-10-2016 11:10:62
 * @License: MIT
 */
 
@@ -29,6 +29,7 @@ GType                 cade_window_controller_get_type (void) G_GNUC_CONST;
 CadeWindowController *cade_window_controller_new ();
 GList *cade_window_controller_get_all_windows(CadeWindowController *controller);
 guint cade_window_controller_get_active_id(CadeWindowController *controller);
+void cade_window_controller_select_window(CadeWindowController *controller, guint id);
 
 G_END_DECLS
 

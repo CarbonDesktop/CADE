@@ -3,18 +3,20 @@
 * @Date:   12-10-2016 09:10:13
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 12-10-2016 10:10:89
+* @Last modified time: 12-10-2016 11:10:89
 * @License: MIT
 */
 
 
 #include "cade-window-list-element.h"
+#include "cade-window-controller.h"
 #include <gtk/gtk.h>
 
 struct _CadeWindowListElement {
   GtkToggleButton parent_instance;
   GtkLabel *label;
   guint winID;
+  CadeWindowController *controller;
 };
 
 struct _CadeWindowListElementClass {
@@ -27,8 +29,19 @@ static void cade_window_list_element_class_init (CadeWindowListElementClass *kla
 {
 }
 
+static void _cade_window_list_element_toggle(GtkToggleButton *button, gpointer data)
+{
+  CadeWindowListElement *self = CADE_WINDOW_LIST_ELEMENT(data);
+  if(gtk_toggle_button_get_active(button))
+  {
+    cade_window_controller_select_window(self->controller, self->winID);
+  }
+}
+
 static void cade_window_list_element_init (CadeWindowListElement *self)
 {
+  self->controller = cade_window_controller_new();
+  g_signal_connect(self, "toggled", G_CALLBACK(_cade_window_list_element_toggle), self);
 }
 
 CadeWindowListElement *cade_window_list_element_new (gchar *title, guint winID)

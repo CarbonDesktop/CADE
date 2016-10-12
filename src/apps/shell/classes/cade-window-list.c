@@ -3,7 +3,7 @@
 * @Date:   12-10-2016 09:10:48
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 12-10-2016 11:10:02
+* @Last modified time: 12-10-2016 11:10:22
 * @License: MIT
 */
 
@@ -106,7 +106,7 @@ static void cade_window_list_class_init (CadeWindowListClass *klass)
 static void cade_window_list_init (CadeWindowList *self)
 {
   self->controller = cade_window_controller_new();
-  g_timeout_add(500, _cade_window_list_refresh_windows, self);
+  g_timeout_add(50, _cade_window_list_refresh_windows, self);
 }
 
 CadeWindowList *
