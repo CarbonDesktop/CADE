@@ -3,7 +3,7 @@
 * @Date:   12-10-2016 09:10:48
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 12-10-2016 11:10:22
+* @Last modified time: 12-10-2016 13:10:29
 * @License: MIT
 */
 
@@ -40,11 +40,14 @@ static gboolean _cade_window_list_refresh_windows(gpointer list)
   {
     CadeAppWindow *win = CADE_APP_WINDOW(iter->data);
     gchar *title = cade_app_window_get_name(win);
+    gboolean alreadyInList = FALSE;
+
+    if(strcmp(title, "cade-shell") == 0)
+      alreadyInList = TRUE;
     guint id = cade_app_window_get_id(win);
 
     existingIter = existing;
-    gboolean alreadyInList = FALSE;
-    while(existingIter != NULL)
+    while(existingIter != NULL && alreadyInList == FALSE)
     {
       guint existingID = cade_window_list_element_get_id(CADE_WINDOW_LIST_ELEMENT(existingIter->data));
       if(id == existingID)
