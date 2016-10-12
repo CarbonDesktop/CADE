@@ -3,13 +3,14 @@
 * @Date:   14-09-2016 18:09:31
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 09-10-2016 12:10:75
+* @Last modified time: 12-10-2016 09:10:36
 * @License: MIT
 */
 
 #include "cade-panel-window.h"
 #include "cade-app-menu-button.h"
 #include "cade-window-controller.h"
+#include "cade-window-list.h"
 #include <gtk/gtk.h>
 
 struct _CadePanelWindow {
@@ -63,6 +64,7 @@ cade_panel_window_init (CadePanelWindow *self)
   gtk_container_add(GTK_CONTAINER(self), self->box);
 
   gtk_box_pack_start(GTK_BOX(self->box), GTK_WIDGET(cade_app_menu_button_new()), FALSE, FALSE, 0);
+  gtk_box_pack_start(GTK_BOX(self->box), GTK_WIDGET(cade_window_list_new()), FALSE, FALSE, 0);
 
   self->windowController = cade_window_controller_new();
   cade_window_controller_get_all_windows(self->windowController);

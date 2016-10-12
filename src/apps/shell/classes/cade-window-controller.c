@@ -3,7 +3,7 @@
 * @Date:   08-10-2016 21:10:30
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 09-10-2016 16:10:75
+* @Last modified time: 12-10-2016 10:10:44
 * @License: MIT
 */
 
@@ -90,5 +90,6 @@ GList *cade_window_controller_get_all_windows(CadeWindowController *controller)
      ret = g_list_append(ret, win);
 
   }
+  XCloseDisplay(d);
   return ret;
 }
