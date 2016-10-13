@@ -2,13 +2,14 @@
 * @Author: Marius Messerschmidt <mame98>
 * @Date:   13-09-2016 20:09:50
 * @Email:  marius.messerschmidt@googlemail.com
-* @Last modified by:   mame98
-* @Last modified time: 22-09-2016 16:09:97
+* @Last modified by:   marius
+* @Last modified time: 13-10-2016 20:10:31
 * @License: MIT
 */
 
 #include "cade-shell-application.h"
 #include "cade-panel-window.h"
+#include <factory/cade-panel-factory.h>
 
 typedef struct _CadeShellApplicationPrivate CadeShellApplicationPrivate;
 
@@ -37,8 +38,8 @@ void cade_shell_application_activate(GApplication *app)
 {
   CadePanelWindow *panel = cade_panel_window_new(GTK_APPLICATION(app));
 
-  gtk_window_present(GTK_WINDOW(panel));
-  gtk_widget_show_all(GTK_WIDGET(panel));
+  CadePanelFactory *factory = cade_panel_factory_new();
+  GList *panels = cade_panel_factory_run(factory, GTK_APPLICATION(app));
 }
 
 /* Object 'Glue' */
