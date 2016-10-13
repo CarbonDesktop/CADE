@@ -3,7 +3,7 @@
 * @Date:   22-09-2016 15:09:02
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 12-10-2016 15:10:07
+* @Last modified time: 13-10-2016 12:10:45
 * @License: MIT
 */
 
@@ -30,6 +30,7 @@ gboolean cade_app_menu_button_toggle(GtkToggleButton *tb)
   CadeAppMenuButton *self = CADE_APP_MENU_BUTTON(tb);
   if (!gtk_widget_is_visible(GTK_WIDGET(self->menu)))
   {
+    cade_app_menu_set_relative_to(self->menu, GTK_WIDGET(self));
     gtk_widget_show_all(GTK_WIDGET(self->menu));
     gtk_widget_set_visible(GTK_WIDGET(self->menu), TRUE);
   }
@@ -61,5 +62,6 @@ CadeAppMenuButton *
 cade_app_menu_button_new (void)
 {
   GtkWidget *icon = gtk_image_new_from_icon_name("gtk-home", GTK_ICON_SIZE_LARGE_TOOLBAR);
-  return g_object_new (CADE_TYPE_APP_MENU_BUTTON, "relief", GTK_RELIEF_NONE,"image", icon,NULL);
+  CadeAppMenuButton *button = g_object_new (CADE_TYPE_APP_MENU_BUTTON, "relief", GTK_RELIEF_NONE,"image", icon,NULL);
+  return button;
 }

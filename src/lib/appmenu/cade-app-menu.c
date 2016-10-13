@@ -3,7 +3,7 @@
 * @Date:   22-09-2016 15:09:62
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 12-10-2016 15:10:77
+* @Last modified time: 13-10-2016 15:10:99
 * @License: MIT
 */
 
@@ -33,6 +33,7 @@ struct _CadeAppMenu {
   enum APP_MENU_MODE mode;
   GList *categoryList;
   GHashTable *categories;
+  GtkWidget *relative;
 };
 
 struct _CadeAppMenuClass {
@@ -144,6 +145,7 @@ void clear_list(GtkListBox *box)
 
 void app_activated (GtkListBox *box, GtkListBoxRow *row, CadeAppMenu *menu)
 {
+
   if(row == GTK_LIST_BOX_ROW(menu->back))
   {
     clear_list(box);
@@ -340,18 +342,44 @@ cade_app_menu_init (CadeAppMenu *self)
   g_signal_connect(self, "focus-out-event", G_CALLBACK(focus_loss_cb), NULL);
   g_signal_connect(self->search, "search-changed", G_CALLBACK(toggle_search), self);
 
-  gtk_widget_realize(GTK_WIDGET(self));
-  gtk_window_move(GTK_WINDOW(self), 0, gdk_screen_get_height(gdk_screen_get_default()) - gdk_window_get_height(gtk_widget_get_window(GTK_WIDGET(self)))); // TODO: DYNAMIC
+
 }
 
 CadeAppMenu *
 cade_app_menu_new (GtkWidget *parent)
 {
-  return g_object_new (CADE_TYPE_APP_MENU, "type" ,GTK_WINDOW_POPUP, NULL);
+  CadeAppMenu *menu = g_object_new (CADE_TYPE_APP_MENU, "type" ,GTK_WINDOW_POPUP, NULL);
+  return menu;
 }
 
 void cade_app_menu_revert(CadeAppMenu *menu)
 {
   menu->mode = MODE_START;
   app_activated(GTK_LIST_BOX(menu->list), GTK_LIST_BOX_ROW(menu->back), menu);
+}
+
+void cade_app_menu_set_relative_to(CadeAppMenu *menu, GtkWidget *relative)
+{
+  gtk_widget_realize(GTK_WIDGET(menu));
+  gtk_widget_show_all(GTK_WIDGET(menu));
+  GdkWindow *relativeWindow = gtk_widget_get_window(relative);
+  if(relativeWindow == NULL)
+  {
+    gtk_widget_realize(GTK_WIDGET(relative));
+    relativeWindow = gtk_widget_get_window(relative);
+  }
+  gint x = 0, y = 0;
+  gdk_window_get_position(relativeWindow, &x, &y);
+
+  gint height = 0, width = 0;
+  gtk_window_get_size(GTK_WINDOW(menu), &width, &height);
+  y -= height;
+
+  if(y < 0)
+  {
+    gdk_window_get_position(relativeWindow, &x, &y);
+    y += gdk_window_get_height(relativeWindow);
+  }
+
+  gtk_window_move(GTK_WINDOW(menu), x, y);
 }

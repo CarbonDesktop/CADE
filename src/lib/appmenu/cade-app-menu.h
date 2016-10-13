@@ -2,8 +2,8 @@
 * @Author: Marius Messerschmidt <mame98>
 * @Date:   22-09-2016 15:09:62
 * @Email:  marius.messerschmidt@googlemail.com
-* @Last modified by:   mame98
-* @Last modified time: 24-09-2016 11:09:88
+* @Last modified by:   marius
+* @Last modified time: 13-10-2016 12:10:46
 * @License: MIT
 */
 
@@ -30,6 +30,7 @@ typedef struct _CadeAppMenuClass   CadeAppMenuClass;
 GType        cade_app_menu_get_type (void) G_GNUC_CONST;
 CadeAppMenu *cade_app_menu_new (GtkWidget *parent);
 void         cade_app_menu_revert(CadeAppMenu *menu);
+void cade_app_menu_set_relative_to(CadeAppMenu *menu, GtkWidget *relative);
 
 G_END_DECLS
 
