@@ -3,13 +3,13 @@
 * @Date:   12-10-2016 09:10:13
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 12-10-2016 11:10:89
+* @Last modified time: 12-10-2016 15:10:09
 * @License: MIT
 */
 
 
 #include "cade-window-list-element.h"
-#include "cade-window-controller.h"
+#include <data/cade-window-controller.h>
 #include <gtk/gtk.h>
 
 struct _CadeWindowListElement {

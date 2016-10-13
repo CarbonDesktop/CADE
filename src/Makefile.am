@@ -1,1 +1,1 @@
-SUBDIRS = apps
+SUBDIRS = lib apps

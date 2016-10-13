@@ -3,15 +3,15 @@
 * @Date:   12-10-2016 09:10:48
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 12-10-2016 13:10:28
+* @Last modified time: 13-10-2016 16:10:31
 * @License: MIT
 */
 
 
 #include "cade-window-list.h"
-#include "cade-window-controller.h"
-#include "cade-window-list-element.h"
-#include "cade-app-window.h"
+#include <data/cade-window-controller.h>
+#include <windowlist/cade-window-list-element.h>
+#include <windowlist/cade-app-window.h>
 #include <gtk/gtk.h>
 
 struct _CadeWindowList {
@@ -42,7 +42,7 @@ static gboolean _cade_window_list_refresh_windows(gpointer list)
     gchar *title = cade_app_window_get_name(win);
     gboolean alreadyInList = FALSE;
 
-    if(g_strcmp0(title, "cade-shell") == 0)
+    if(g_strcmp0(title, "cade-shell") == 0 || g_strcmp0(title, "lt-cade-shell") == 0)
       alreadyInList = TRUE;
     guint id = cade_app_window_get_id(win);
 

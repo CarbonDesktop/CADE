@@ -3,13 +3,13 @@
 * @Date:   08-10-2016 21:10:30
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 12-10-2016 11:10:11
+* @Last modified time: 12-10-2016 15:10:69
 * @License: MIT
 */
 
 #include <config.h>
 #include "cade-window-controller.h"
-#include "cade-app-window.h"
+#include <windowlist/cade-app-window.h>
 #include <gtk/gtk.h>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
