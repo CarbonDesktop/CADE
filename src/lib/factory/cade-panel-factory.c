@@ -3,7 +3,7 @@
 * @Date:   13-10-2016 16:10:02
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 13-10-2016 20:10:79
+* @Last modified time: 14-10-2016 19:10:43
 * @License: MIT
 */
 
@@ -67,6 +67,7 @@ GList *cade_panel_factory_run(CadePanelFactory *factory, GtkApplication *app)
 
 
     gtk_widget_show_all(GTK_WIDGET(panel));
+    gtk_window_present(GTK_WINDOW(panel));
     panels = g_list_append(panels, panel);
 
     g_key_file_unref(keyfile);

@@ -44,3 +44,4 @@ ltmain.sh
 *.lo
 .libs
 *.la
+cade-*.*.*.tar.gz
