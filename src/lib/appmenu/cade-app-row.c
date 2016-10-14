@@ -2,8 +2,8 @@
 * @Author: Marius Messerschmidt <mame98>
 * @Date:   23-09-2016 19:09:43
 * @Email:  marius.messerschmidt@googlemail.com
-* @Last modified by:   mame98
-* @Last modified time: 02-10-2016 15:10:21
+* @Last modified by:   marius
+* @Last modified time: 14-10-2016 20:10:40
 * @License: MIT
 */
 
@@ -54,7 +54,7 @@ static void finalize(CadeAppRow *self)
 
   if(self->tooltip)
   {
-    gchar *temp = g_strdup_printf("<span font-weight='bold'>Name:</span> %s\n \
+    gchar *temp = g_markup_printf_escaped("<span font-weight='bold'>Name:</span> %s\n \
 <span font-weight='bold'>Description:</span> %s\n \
 <span font-weight='bold'>Command:</span> %s", self->name, self->description, self->exec);
 
