@@ -1,21 +1,32 @@
 # @Author: Marius Messerschmidt <marius>
-# @Date:   08-10-2016 11:10:24
+# @Date:   14-10-2016 16:10:06
 # @Email:  marius.messerschmidt@googlemail.com
 # @Last modified by:   marius
-# @Last modified time: 09-10-2016 12:10:81
+# @Last modified time: 14-10-2016 16:10:48
 # @License: MIT
+
+
 language: c
 sudo: required
 dist: trusty
-script: ./autogen.sh && ./configure && make && make check
+script: "./autogen.sh && ./configure && make && make check"
 
 before_install:
-  - sudo add-apt-repository ppa:gnome3-team/gnome3 -y
-  - sudo add-apt-repository ppa:gnome3-team/gnome3-staging -y
-  - sudo apt-get update -qq
-  - sudo apt-get install libgtk-3-dev cppcheck pkg-config libx11-dev -y
-
-
-
+- sudo add-apt-repository ppa:gnome3-team/gnome3 -y
+- sudo add-apt-repository ppa:gnome3-team/gnome3-staging -y
+- sudo apt-get update -qq
+- sudo apt-get install libgtk-3-dev cppcheck pkg-config libx11-dev -y
 after_failure:
-  - find . -name "*.log" -exec cat {} +
+- find . -name "*.log" -exec cat {} +
+after_success:
+- make dist
+
+deploy:
+  provider: releases
+  api_key:
+    secure: E4geYex+pEGhMl02+mEOV4Ypco/XgWXuTJopY6IhrEvqiAdynqqMALma0P5Cz48HYoIsrrzkNzVz4eRIvSu4uRBU59vJDp0vGjx32kCce+U4IesSe6yrus0VBRAyPE3IxRI3BqLe1cATwsoleEEZoxUUsOwWrfnlHc/BZnI/PN7zkcqH4NhPiTYMtw6FmBGNMMquzaaPeX9Qc5PdzZi6f+y+oK+/UDDUvhO/cGrBYT8+BpzMbGZpdZ0Rraatl4BOPsl1d0x472IMf5I0GBc9YQbsOE8UtmejbqRt+K3QzyeSU9Nd54ss9CA0kJe6Yvl+GpAKCCJGp5GFxMViDG1XaExr8XAEH+XI24E4Q6iCaweF1bWUeKw0M7aXzMavf/eMH3n4itE2WtDsa1tCd6nMe0LMQrnbxDp+RrTTpR76tRSb5n86iluSkBAbH5KWVbq+/5AsIMONnkLVgOcQCaVE5PveBMvwgWcRu4h1aGxAWuQjXWCxKiCqTc34AsbRM+LI9DIB5jtXw/Sk+M80T2TRPz4AZRjcO0Sxpgr6IKqjUe3xDB7kFaxO2Ilrrkt9QGyEdSoa7H5oo6jDrWfNB0DlSb7KqxlL9y/Y7KTWGPPei/k9dsEKSZxXWYjL+xgpeuu/woo8cJdjC+0stxLhVdwa6k6kz3M7ljWTvTJ8HoUBqyA=
+  file_glob: true
+  file: cade-*.*.*.tar.gz
+  on:
+    repo: CarbonDesktop/CADE
+    tags: true

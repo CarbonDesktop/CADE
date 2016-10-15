@@ -3,7 +3,7 @@
 * @Date:   22-09-2016 15:09:62
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 13-10-2016 15:10:99
+* @Last modified time: 14-10-2016 20:10:88
 * @License: MIT
 */
 
@@ -342,7 +342,7 @@ cade_app_menu_init (CadeAppMenu *self)
   g_signal_connect(self, "focus-out-event", G_CALLBACK(focus_loss_cb), NULL);
   g_signal_connect(self->search, "search-changed", G_CALLBACK(toggle_search), self);
 
-
+  gtk_widget_realize(GTK_WIDGET(self));
 }
 
 CadeAppMenu *
@@ -380,6 +380,5 @@ void cade_app_menu_set_relative_to(CadeAppMenu *menu, GtkWidget *relative)
     gdk_window_get_position(relativeWindow, &x, &y);
     y += gdk_window_get_height(relativeWindow);
   }
-
   gtk_window_move(GTK_WINDOW(menu), x, y);
 }
