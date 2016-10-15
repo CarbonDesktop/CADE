@@ -3,7 +3,7 @@
 * @Date:   13-10-2016 16:10:02
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 14-10-2016 20:10:40
+* @Last modified time: 15-10-2016 17:10:38
 * @License: MIT
 */
 
@@ -63,7 +63,19 @@ GList *cade_panel_factory_run(CadePanelFactory *factory, GtkApplication *app)
       continue;
     }
 
-    CadePanelWindow *panel = cade_panel_window_new(app);
+    enum CadePanelPosition pos;
+
+    gchar *temp = g_key_file_get_string(keyfile, "PanelConfiguration", "position", NULL);
+    if(g_strcmp0(temp, "top") == 0)
+    {
+      pos = CADE_PANEL_POSITION_TOP;
+    }
+    else
+    {
+      pos = CADE_PANEL_POSITION_BOTTOM;
+    }
+
+    CadePanelWindow *panel = cade_panel_window_new(app, pos);
 
 
     gtk_widget_show_all(GTK_WIDGET(panel));

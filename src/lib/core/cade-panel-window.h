@@ -2,8 +2,8 @@
 * @Author: Marius Messerschmidt <mame98>
 * @Date:   14-09-2016 18:09:31
 * @Email:  marius.messerschmidt@googlemail.com
-* @Last modified by:   mame98
-* @Last modified time: 14-09-2016 20:09:40
+* @Last modified by:   marius
+* @Last modified time: 15-10-2016 17:10:29
 * @License: MIT
 */
 
@@ -14,6 +14,12 @@
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
+
+enum CadePanelPosition
+{
+  CADE_PANEL_POSITION_BOTTOM = 0,
+  CADE_PANEL_POSITION_TOP
+};
 
 G_BEGIN_DECLS
 
@@ -28,7 +34,7 @@ typedef struct _CadePanelWindow        CadePanelWindow;
 typedef struct _CadePanelWindowClass   CadePanelWindowClass;
 
 GType            cade_panel_window_get_type (void) G_GNUC_CONST;
-CadePanelWindow *cade_panel_window_new (GtkApplication *app);
+CadePanelWindow *cade_panel_window_new (GtkApplication *app, enum CadePanelPosition pos);
 
 G_END_DECLS
 

@@ -3,7 +3,7 @@
 * @Date:   13-09-2016 20:09:50
 * @Email:  marius.messerschmidt@googlemail.com
 * @Last modified by:   marius
-* @Last modified time: 14-10-2016 20:10:46
+* @Last modified time: 15-10-2016 17:10:25
 * @License: MIT
 */
 
@@ -36,8 +36,6 @@ G_DEFINE_TYPE (CadeShellApplication, cade_shell_application, GTK_TYPE_APPLICATIO
 
 void cade_shell_application_activate(GApplication *app)
 {
-  CadePanelWindow *panel = cade_panel_window_new(GTK_APPLICATION(app));
-
   CadePanelFactory *factory = cade_panel_factory_new();
   GList *panels = cade_panel_factory_run(factory, GTK_APPLICATION(app));
 }
