@@ -1,0 +1,29 @@
+# Created by Marius Messerschmidt
+
+pkgname=@PACKAGE_TARNAME@
+pkgver=@PACKAGE_VERSION@
+pkgrel=1
+pkgdesc="A modern and lightweight desktop environment"
+arch=('any')
+url="https://github.com/CarbonDesktop/CADE"
+license=('MIT')
+source=("https://github.com/CarbonDesktop/CADE/releases/download/v.@PACKAGE_VERSION@/@PACKAGE_TARNAME@-@PACKAGE_VERSION@.tar.gz") 
+sha256sums=('SKIP')
+
+build() {
+    cd "${srcdir}"
+    tar -xzf "@PACKAGE_TARNAME@-@PACKAGE_VERSION@.tar.gz"
+    cd @PACKAGE_TARNAME@-@PACKAGE_VERSION@
+    ./configure --prefix=/usr
+    make
+}
+
+check () {
+    cd "${srcdir}/@PACKAGE_TARNAME@-@PACKAGE_VERSION@"
+    make check
+}
+
+package() {
+    cd "${srcdir}/@PACKAGE_TARNAME@-@PACKAGE_VERSION@"
+    make DESTDIR="${pkgdir}" install
+}

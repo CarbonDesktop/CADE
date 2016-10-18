@@ -45,3 +45,6 @@ ltmain.sh
 .libs
 *.la
 cade-*.*.*.tar.gz
+
+# Package Stuff
+pkgdata/arch/PKGBUILD

@@ -29,6 +29,8 @@ AC_CONFIG_FILES([
   src/lib/Makefile
   src/apps/Makefile
   src/apps/shell/Makefile
+  
+  pkgdata/arch/PKGBUILD
   ])
 
 
