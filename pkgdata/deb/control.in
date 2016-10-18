@@ -1,0 +1,7 @@
+Package: @PACKAGE_TARNAME@
+Version: @PACKAGE_VERSION@
+Section: other
+Priority: optional
+Architecture: @build_cpu@
+Maintainer: Marius Messerschmidt <marius.messerschmidt@googlemail.com>
+Description: A modern and lightweight desktop environment

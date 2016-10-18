@@ -47,4 +47,7 @@ ltmain.sh
 cade-*.*.*.tar.gz
 
 # Package Stuff
+pkgdata/deb/control
 pkgdata/arch/PKGBUILD
+build/
+*.deb

@@ -5,6 +5,7 @@ AM_PROG_AR
 AM_PROG_LIBTOOL
 
 AC_LANG(C)
+AC_CANONICAL_BUILD
 
 
 # General Checks
@@ -29,8 +30,9 @@ AC_CONFIG_FILES([
   src/lib/Makefile
   src/apps/Makefile
   src/apps/shell/Makefile
-  
+
   pkgdata/arch/PKGBUILD
+  pkgdata/deb/control
   ])
 
 
