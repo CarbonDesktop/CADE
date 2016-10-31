@@ -11,6 +11,8 @@
 #include "cade-panel-factory.h"
 #include <string.h>
 #include <core/cade-panel-window.h>
+#include <appmenu/cade-app-menu-button.h>
+#include <windowlist/cade-window-list.h>
 #include <cade-data.h>
 #include <gtk/gtk.h>
 
@@ -24,6 +26,21 @@ struct _CadePanelFactoryClass {
 };
 
 G_DEFINE_TYPE (CadePanelFactory, cade_panel_factory, G_TYPE_OBJECT)
+
+static gchar* getGroup(GKeyFile *keyfile, gsize n)
+{
+  gchar *groupname = g_strdup_printf("Item%ld", n);
+  if(g_key_file_has_group(keyfile, groupname))
+  {
+    return groupname;
+  }
+  else
+  {
+    g_free(groupname);
+    return NULL;
+  }
+}
+
 
 static void cade_panel_factory_class_init (CadePanelFactoryClass *klass)
 {
@@ -74,8 +91,35 @@ GList *cade_panel_factory_run(CadePanelFactory *factory, GtkApplication *app)
     {
       pos = CADE_PANEL_POSITION_BOTTOM;
     }
-
     CadePanelWindow *panel = cade_panel_window_new(app, pos);
+
+    gsize n = 1;
+    gchar *group = NULL;
+
+    //TODO: This does not look like a clean way to initialize the Types ^^
+    gtk_widget_destroy(GTK_WIDGET(cade_app_menu_button_new()));
+    gtk_widget_destroy(GTK_WIDGET(cade_window_list_new()));
+
+    while((group = getGroup(keyfile, n)) != NULL)
+    {
+      gchar *type = g_key_file_get_string(keyfile, group, "type", NULL);
+
+      GType typeID = g_type_from_name(type);
+
+      GtkWidget *widget = NULL;
+      if(typeID == CADE_TYPE_APP_MENU_BUTTON)
+        widget = GTK_WIDGET(cade_app_menu_button_new());
+      else if(typeID == CADE_TYPE_WINDOW_LIST)
+        widget = GTK_WIDGET(cade_window_list_new());
+      else
+        g_critical("Type %s (ID:%ld) not found!", type, typeID);
+
+      cade_panel_window_add_widget(panel, widget);
+
+
+      g_free(group);
+      n++;
+    }
 
 
     gtk_widget_show_all(GTK_WIDGET(panel));

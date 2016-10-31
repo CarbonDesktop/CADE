@@ -9,6 +9,6 @@
 #ifndef __CADE_DATA_H__
 #define __CADE_DATA_H__
 
-#define CADE_DEFAULT_PANEL_CONFIG_FILE "[PanelConfiguration]\nposition=bottom\n"
+#define CADE_DEFAULT_PANEL_CONFIG_FILE "[PanelConfiguration]\nposition=bottom\n\n[Item1]\ntype=CadeAppMenuButton\n\n[Item2]\ntype=CadeWindowList\n"
 
 #endif
