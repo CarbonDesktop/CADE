@@ -29,6 +29,7 @@ typedef struct _CadePanelFactoryClass   CadePanelFactoryClass;
 GType             cade_panel_factory_get_type (void) G_GNUC_CONST;
 CadePanelFactory *cade_panel_factory_new (void);
 GList *cade_panel_factory_run(CadePanelFactory *factory, GtkApplication *app);
+void cade_panel_factory_register(CadePanelFactory *self, gulong id, GtkWidget *(*createFunc)(void));
 
 G_END_DECLS
 

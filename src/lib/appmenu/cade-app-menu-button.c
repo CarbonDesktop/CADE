@@ -65,3 +65,8 @@ cade_app_menu_button_new (void)
   CadeAppMenuButton *button = g_object_new (CADE_TYPE_APP_MENU_BUTTON, "relief", GTK_RELIEF_NONE,"image", icon,NULL);
   return button;
 }
+
+GtkWidget *cade_app_menu_button_new_widget(void)
+{
+  return GTK_WIDGET(cade_app_menu_button_new());
+}

@@ -19,11 +19,14 @@
 struct _CadePanelFactory {
   GObject parent_instance;
   gchar *path;
+  GHashTable *typeRegister;
 };
 
 struct _CadePanelFactoryClass {
   GObjectClass parent_class;
 };
+
+typedef GtkWidget *(*CreateFunc)(void);
 
 G_DEFINE_TYPE (CadePanelFactory, cade_panel_factory, G_TYPE_OBJECT)
 
@@ -56,6 +59,12 @@ static void cade_panel_factory_init (CadePanelFactory *self)
     g_file_set_contents(file, CADE_DEFAULT_PANEL_CONFIG_FILE, strlen(CADE_DEFAULT_PANEL_CONFIG_FILE), NULL);
     g_free(file);
   }
+
+  self->typeRegister = g_hash_table_new(g_direct_hash, g_direct_equal);
+  cade_panel_factory_register(self, CADE_TYPE_APP_MENU_BUTTON, cade_app_menu_button_new_widget);
+  cade_panel_factory_register(self, CADE_TYPE_WINDOW_LIST, cade_window_list_new_widget);
+
+
 }
 
 CadePanelFactory *cade_panel_factory_new (void)
@@ -107,12 +116,13 @@ GList *cade_panel_factory_run(CadePanelFactory *factory, GtkApplication *app)
       GType typeID = g_type_from_name(type);
 
       GtkWidget *widget = NULL;
-      if(typeID == CADE_TYPE_APP_MENU_BUTTON)
-        widget = GTK_WIDGET(cade_app_menu_button_new());
-      else if(typeID == CADE_TYPE_WINDOW_LIST)
-        widget = GTK_WIDGET(cade_window_list_new());
-      else
+
+      CreateFunc func = g_hash_table_lookup(factory->typeRegister, GSIZE_TO_POINTER(typeID));
+
+      if(func == NULL)
         g_critical("Type %s (ID:%ld) not found!", type, typeID);
+      else
+        widget = func();
 
       cade_panel_window_add_widget(panel, widget);
 
@@ -131,4 +141,9 @@ GList *cade_panel_factory_run(CadePanelFactory *factory, GtkApplication *app)
   }
 
   g_dir_close(panelDir);
+}
+
+void cade_panel_factory_register(CadePanelFactory *self, gulong id, CreateFunc createFunc)
+{
+  g_hash_table_insert(self->typeRegister, GSIZE_TO_POINTER(id), createFunc);
 }

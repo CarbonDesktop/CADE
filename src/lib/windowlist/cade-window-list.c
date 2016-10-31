@@ -119,3 +119,8 @@ cade_window_list_new (void)
 {
   return g_object_new (CADE_TYPE_WINDOW_LIST, "homogeneous", TRUE, "orientation", GTK_ORIENTATION_HORIZONTAL, NULL);
 }
+
+GtkWidget *cade_window_list_new_widget(void)
+{
+  return GTK_WIDGET(cade_window_list_new());
+}

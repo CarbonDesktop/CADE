@@ -2,6 +2,7 @@
 #define __CADE_WINDOW_LIST_H__
 
 #include <glib-object.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
@@ -17,6 +18,7 @@ typedef struct _CadeWindowListClass   CadeWindowListClass;
 
 GType           cade_window_list_get_type (void) G_GNUC_CONST;
 CadeWindowList *cade_window_list_new (void);
+GtkWidget *cade_window_list_new_widget(void);
 
 G_END_DECLS
 
