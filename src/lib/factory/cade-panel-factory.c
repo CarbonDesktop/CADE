@@ -13,6 +13,7 @@
 #include <core/cade-panel-window.h>
 #include <appmenu/cade-app-menu-button.h>
 #include <windowlist/cade-window-list.h>
+#include <spacer/cade-panel-spacer.h>
 #include <cade-data.h>
 #include <gtk/gtk.h>
 
@@ -26,7 +27,7 @@ struct _CadePanelFactoryClass {
   GObjectClass parent_class;
 };
 
-typedef GtkWidget *(*CreateFunc)(void);
+typedef GtkWidget *(*CreateFunc)(GHashTable *);
 
 G_DEFINE_TYPE (CadePanelFactory, cade_panel_factory, G_TYPE_OBJECT)
 
@@ -63,6 +64,7 @@ static void cade_panel_factory_init (CadePanelFactory *self)
   self->typeRegister = g_hash_table_new(g_direct_hash, g_direct_equal);
   cade_panel_factory_register(self, CADE_TYPE_APP_MENU_BUTTON, cade_app_menu_button_new);
   cade_panel_factory_register(self, CADE_TYPE_WINDOW_LIST, cade_window_list_new);
+  cade_panel_factory_register(self, CADE_TYPE_PANEL_SPACER, cade_panel_spacer_new);
 
 
 }
@@ -115,10 +117,22 @@ GList *cade_panel_factory_run(CadePanelFactory *factory, GtkApplication *app)
 
       CreateFunc func = g_hash_table_lookup(factory->typeRegister, GSIZE_TO_POINTER(typeID));
 
+      GHashTable *params = g_hash_table_new(g_str_hash, g_str_equal);
+      gchar **keys;
+      gsize nKeys;
+      keys = g_key_file_get_keys(keyfile, group, &nKeys, NULL);
+      for(gsize x = 0; x < nKeys; x++)
+      {
+        g_hash_table_insert(params, keys[x], g_key_file_get_string(keyfile, group, keys[x], NULL));
+      }
+
+
       if(func == NULL)
         g_critical("Type %s (ID:%ld) not found!", type, typeID);
       else
-        widget = func();
+        widget = func(params);
+
+
 
       cade_panel_window_add_widget(panel, widget);
 

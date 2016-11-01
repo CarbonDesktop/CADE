@@ -115,7 +115,7 @@ static void cade_window_list_init (CadeWindowList *self)
 }
 
 GtkWidget *
-cade_window_list_new (void)
+cade_window_list_new (GHashTable *attr)
 {
   return GTK_WIDGET(g_object_new (CADE_TYPE_WINDOW_LIST, "homogeneous", TRUE, "orientation", GTK_ORIENTATION_HORIZONTAL, NULL));
 }

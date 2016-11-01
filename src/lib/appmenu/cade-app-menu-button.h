@@ -28,7 +28,7 @@ typedef struct _CadeAppMenuButton        CadeAppMenuButton;
 typedef struct _CadeAppMenuButtonClass   CadeAppMenuButtonClass;
 
 GType              cade_app_menu_button_get_type (void) G_GNUC_CONST;
-GtkWidget          *cade_app_menu_button_new (void);
+GtkWidget          *cade_app_menu_button_new (GHashTable *attr);
 
 G_END_DECLS
 

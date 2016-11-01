@@ -59,7 +59,7 @@ cade_app_menu_button_init (CadeAppMenuButton *self)
 }
 
 GtkWidget *
-cade_app_menu_button_new (void)
+cade_app_menu_button_new (GHashTable *attr)
 {
   GtkWidget *icon = gtk_image_new_from_icon_name("gtk-home", GTK_ICON_SIZE_LARGE_TOOLBAR);
   CadeAppMenuButton *button = g_object_new (CADE_TYPE_APP_MENU_BUTTON, "relief", GTK_RELIEF_NONE,"image", icon,NULL);
