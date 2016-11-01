@@ -1,7 +1,9 @@
 SUBDIRS = src
 dist_doc_DATA = README.md AUTHORS LICENSE
+EXTRA_DIST = scripts
 BUILT_SOURCES = AUTHORS
 TESTS =
+DISTCLEANFILES = AUTHORS
 
 if HAVE_CPPCHECK
 TESTS += scripts/test-static.sh
@@ -12,5 +14,3 @@ endif
 AUTHORS:
 	echo "GIT Contributors:" > AUTHORS
 	git log --format='%aN <%aE>' | sort -u >> AUTHORS
-
-all: AUTHORS
