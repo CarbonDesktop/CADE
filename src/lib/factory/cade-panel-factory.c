@@ -61,8 +61,8 @@ static void cade_panel_factory_init (CadePanelFactory *self)
   }
 
   self->typeRegister = g_hash_table_new(g_direct_hash, g_direct_equal);
-  cade_panel_factory_register(self, CADE_TYPE_APP_MENU_BUTTON, cade_app_menu_button_new_widget);
-  cade_panel_factory_register(self, CADE_TYPE_WINDOW_LIST, cade_window_list_new_widget);
+  cade_panel_factory_register(self, CADE_TYPE_APP_MENU_BUTTON, cade_app_menu_button_new);
+  cade_panel_factory_register(self, CADE_TYPE_WINDOW_LIST, cade_window_list_new);
 
 
 }
@@ -104,10 +104,6 @@ GList *cade_panel_factory_run(CadePanelFactory *factory, GtkApplication *app)
 
     gsize n = 1;
     gchar *group = NULL;
-
-    //TODO: This does not look like a clean way to initialize the Types ^^
-    gtk_widget_destroy(GTK_WIDGET(cade_app_menu_button_new()));
-    gtk_widget_destroy(GTK_WIDGET(cade_window_list_new()));
 
     while((group = getGroup(keyfile, n)) != NULL)
     {

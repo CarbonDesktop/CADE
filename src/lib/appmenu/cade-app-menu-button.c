@@ -58,15 +58,10 @@ cade_app_menu_button_init (CadeAppMenuButton *self)
   self->menu = cade_app_menu_new(GTK_WIDGET(self));
 }
 
-CadeAppMenuButton *
+GtkWidget *
 cade_app_menu_button_new (void)
 {
   GtkWidget *icon = gtk_image_new_from_icon_name("gtk-home", GTK_ICON_SIZE_LARGE_TOOLBAR);
   CadeAppMenuButton *button = g_object_new (CADE_TYPE_APP_MENU_BUTTON, "relief", GTK_RELIEF_NONE,"image", icon,NULL);
-  return button;
-}
-
-GtkWidget *cade_app_menu_button_new_widget(void)
-{
-  return GTK_WIDGET(cade_app_menu_button_new());
+  return GTK_WIDGET(button);
 }
