@@ -14,6 +14,7 @@
 #include <appmenu/cade-app-menu-button.h>
 #include <windowlist/cade-window-list.h>
 #include <spacer/cade-panel-spacer.h>
+#include <launcher/cade-panel-launcher.h>
 #include <cade-data.h>
 #include <gtk/gtk.h>
 
@@ -65,6 +66,7 @@ static void cade_panel_factory_init (CadePanelFactory *self)
   cade_panel_factory_register(self, CADE_TYPE_APP_MENU_BUTTON, cade_app_menu_button_new);
   cade_panel_factory_register(self, CADE_TYPE_WINDOW_LIST, cade_window_list_new);
   cade_panel_factory_register(self, CADE_TYPE_PANEL_SPACER, cade_panel_spacer_new);
+  cade_panel_factory_register(self, CADE_TYPE_PANEL_LAUNCHER, cade_panel_launcher_new);
 
 
 }
