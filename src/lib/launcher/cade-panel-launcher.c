@@ -47,7 +47,7 @@ void cade_panel_launcher_set_app(CadePanelLauncher *self, gchar *name)
 
   gtk_widget_set_tooltip_text(GTK_WIDGET(self), appName);
 
-  GtkWidget *image = gtk_image_new_from_icon_name(icon, GTK_ICON_SIZE_LARGE_TOOLBAR);
+  GtkWidget *image = gtk_image_new_from_icon_name(icon, GTK_ICON_SIZE_SMALL_TOOLBAR);
   gtk_button_set_image(GTK_BUTTON(self), image);
 
   g_free(appName);
