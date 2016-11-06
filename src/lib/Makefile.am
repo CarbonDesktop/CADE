@@ -12,6 +12,7 @@ noinst_HEADERS =         appmenu/cade-app-menu-button.h \
                          factory/cade-panel-factory.h   \
                          spacer/cade-panel-spacer.h     \
                          launcher/cade-panel-launcher.h     \
+                         ui/cade-panel-popup-window.h   \
                          cade-core.h                    \
                          cade-data.h
 
@@ -28,6 +29,7 @@ libcade_core_la_SOURCES = appmenu/cade-app-menu-button.c  \
                          windowlist/cade-window-list.c  \
                          spacer/cade-panel-spacer.c     \
                          launcher/cade-panel-launcher.c     \
+                         ui/cade-panel-popup-window.c   \
                          factory/cade-panel-factory.c
 
 libcade_core_la_LIBADD = ${GTK3_LIBS} ${GObject_LIBS} $(X11_LIBS)

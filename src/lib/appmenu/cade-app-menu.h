@@ -14,6 +14,7 @@
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
+#include <ui/cade-panel-popup-window.h>
 
 G_BEGIN_DECLS
 
@@ -30,7 +31,6 @@ typedef struct _CadeAppMenuClass   CadeAppMenuClass;
 GType        cade_app_menu_get_type (void) G_GNUC_CONST;
 CadeAppMenu *cade_app_menu_new (GtkWidget *parent);
 void         cade_app_menu_revert(CadeAppMenu *menu);
-void cade_app_menu_set_relative_to(CadeAppMenu *menu, GtkWidget *relative);
 
 G_END_DECLS
 
