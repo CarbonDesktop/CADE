@@ -11,19 +11,41 @@
 #include "cade-panel-factory.h"
 #include <string.h>
 #include <core/cade-panel-window.h>
+#include <appmenu/cade-app-menu-button.h>
+#include <windowlist/cade-window-list.h>
+#include <spacer/cade-panel-spacer.h>
+#include <launcher/cade-panel-launcher.h>
 #include <cade-data.h>
 #include <gtk/gtk.h>
 
 struct _CadePanelFactory {
   GObject parent_instance;
   gchar *path;
+  GHashTable *typeRegister;
 };
 
 struct _CadePanelFactoryClass {
   GObjectClass parent_class;
 };
 
+typedef GtkWidget *(*CreateFunc)(GHashTable *);
+
 G_DEFINE_TYPE (CadePanelFactory, cade_panel_factory, G_TYPE_OBJECT)
+
+static gchar* getGroup(GKeyFile *keyfile, gsize n)
+{
+  gchar *groupname = g_strdup_printf("Item%ld", n);
+  if(g_key_file_has_group(keyfile, groupname))
+  {
+    return groupname;
+  }
+  else
+  {
+    g_free(groupname);
+    return NULL;
+  }
+}
+
 
 static void cade_panel_factory_class_init (CadePanelFactoryClass *klass)
 {
@@ -39,6 +61,14 @@ static void cade_panel_factory_init (CadePanelFactory *self)
     g_file_set_contents(file, CADE_DEFAULT_PANEL_CONFIG_FILE, strlen(CADE_DEFAULT_PANEL_CONFIG_FILE), NULL);
     g_free(file);
   }
+
+  self->typeRegister = g_hash_table_new(g_direct_hash, g_direct_equal);
+  cade_panel_factory_register(self, CADE_TYPE_APP_MENU_BUTTON, cade_app_menu_button_new);
+  cade_panel_factory_register(self, CADE_TYPE_WINDOW_LIST, cade_window_list_new);
+  cade_panel_factory_register(self, CADE_TYPE_PANEL_SPACER, cade_panel_spacer_new);
+  cade_panel_factory_register(self, CADE_TYPE_PANEL_LAUNCHER, cade_panel_launcher_new);
+
+
 }
 
 CadePanelFactory *cade_panel_factory_new (void)
@@ -74,8 +104,44 @@ GList *cade_panel_factory_run(CadePanelFactory *factory, GtkApplication *app)
     {
       pos = CADE_PANEL_POSITION_BOTTOM;
     }
-
     CadePanelWindow *panel = cade_panel_window_new(app, pos);
+
+    gsize n = 1;
+    gchar *group = NULL;
+
+    while((group = getGroup(keyfile, n)) != NULL)
+    {
+      gchar *type = g_key_file_get_string(keyfile, group, "type", NULL);
+
+      GType typeID = g_type_from_name(type);
+
+      GtkWidget *widget = NULL;
+
+      CreateFunc func = g_hash_table_lookup(factory->typeRegister, GSIZE_TO_POINTER(typeID));
+
+      GHashTable *params = g_hash_table_new(g_str_hash, g_str_equal);
+      gchar **keys;
+      gsize nKeys;
+      keys = g_key_file_get_keys(keyfile, group, &nKeys, NULL);
+      for(gsize x = 0; x < nKeys; x++)
+      {
+        g_hash_table_insert(params, keys[x], g_key_file_get_string(keyfile, group, keys[x], NULL));
+      }
+
+
+      if(func == NULL)
+        g_critical("Type %s (ID:%ld) not found!", type, typeID);
+      else
+        widget = func(params);
+
+
+
+      cade_panel_window_add_widget(panel, widget);
+
+
+      g_free(group);
+      n++;
+    }
 
 
     gtk_widget_show_all(GTK_WIDGET(panel));
@@ -87,4 +153,9 @@ GList *cade_panel_factory_run(CadePanelFactory *factory, GtkApplication *app)
   }
 
   g_dir_close(panelDir);
+}
+
+void cade_panel_factory_register(CadePanelFactory *self, gulong id, CreateFunc createFunc)
+{
+  g_hash_table_insert(self->typeRegister, GSIZE_TO_POINTER(id), createFunc);
 }

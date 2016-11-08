@@ -35,6 +35,7 @@ typedef struct _CadePanelWindowClass   CadePanelWindowClass;
 
 GType            cade_panel_window_get_type (void) G_GNUC_CONST;
 CadePanelWindow *cade_panel_window_new (GtkApplication *app, enum CadePanelPosition pos);
+void cade_panel_window_add_widget(CadePanelWindow *panel, GtkWidget *widget);
 
 G_END_DECLS
 

@@ -25,12 +25,12 @@ G_DEFINE_TYPE (CadeAppMenuButton, cade_app_menu_button, GTK_TYPE_TOGGLE_BUTTON)
 
 // Callbacks
 
-gboolean cade_app_menu_button_toggle(GtkToggleButton *tb)
+static void cade_app_menu_button_toggle(GtkToggleButton *tb)
 {
   CadeAppMenuButton *self = CADE_APP_MENU_BUTTON(tb);
   if (!gtk_widget_is_visible(GTK_WIDGET(self->menu)))
   {
-    cade_app_menu_set_relative_to(self->menu, GTK_WIDGET(self));
+    cade_panel_popup_window_set_relative_to(CADE_PANEL_POPUP_WINDOW(self->menu), GTK_WIDGET(self));
     gtk_widget_show_all(GTK_WIDGET(self->menu));
     gtk_widget_set_visible(GTK_WIDGET(self->menu), TRUE);
   }
@@ -39,8 +39,6 @@ gboolean cade_app_menu_button_toggle(GtkToggleButton *tb)
     gtk_widget_hide(GTK_WIDGET(self->menu));
     cade_app_menu_revert(self->menu);
   }
-
-  return FALSE;
 }
 
 // Object
@@ -58,10 +56,10 @@ cade_app_menu_button_init (CadeAppMenuButton *self)
   self->menu = cade_app_menu_new(GTK_WIDGET(self));
 }
 
-CadeAppMenuButton *
-cade_app_menu_button_new (void)
+GtkWidget *
+cade_app_menu_button_new (GHashTable *attr)
 {
   GtkWidget *icon = gtk_image_new_from_icon_name("gtk-home", GTK_ICON_SIZE_LARGE_TOOLBAR);
   CadeAppMenuButton *button = g_object_new (CADE_TYPE_APP_MENU_BUTTON, "relief", GTK_RELIEF_NONE,"image", icon,NULL);
-  return button;
+  return GTK_WIDGET(button);
 }

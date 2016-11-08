@@ -129,10 +129,7 @@ cade_panel_window_init (CadePanelWindow *self)
 
   self->box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
   gtk_container_add(GTK_CONTAINER(self), self->box);
-
-  gtk_box_pack_start(GTK_BOX(self->box), GTK_WIDGET(cade_app_menu_button_new()), FALSE, FALSE, 0);
-  gtk_box_pack_start(GTK_BOX(self->box), GTK_WIDGET(cade_window_list_new()), FALSE, FALSE, 0);
-
+  
   g_timeout_add(100, _cade_panel_window_ensure_size, self);
 
   self->windowController = cade_window_controller_new();
@@ -142,4 +139,9 @@ cade_panel_window_init (CadePanelWindow *self)
 CadePanelWindow *cade_panel_window_new (GtkApplication *app, enum CadePanelPosition pos)
 {
   return g_object_new (CADE_TYPE_PANEL_WINDOW, "application", app, "position", pos, NULL);
+}
+
+void cade_panel_window_add_widget(CadePanelWindow *panel, GtkWidget *widget)
+{
+  gtk_box_pack_start(GTK_BOX(panel->box), GTK_WIDGET(widget), FALSE, FALSE, 0);
 }

@@ -114,8 +114,8 @@ static void cade_window_list_init (CadeWindowList *self)
   g_timeout_add(50, _cade_window_list_refresh_windows, self);
 }
 
-CadeWindowList *
-cade_window_list_new (void)
+GtkWidget *
+cade_window_list_new (GHashTable *attr)
 {
-  return g_object_new (CADE_TYPE_WINDOW_LIST, "homogeneous", TRUE, "orientation", GTK_ORIENTATION_HORIZONTAL, NULL);
+  return GTK_WIDGET(g_object_new (CADE_TYPE_WINDOW_LIST, "homogeneous", TRUE, "orientation", GTK_ORIENTATION_HORIZONTAL, NULL));
 }

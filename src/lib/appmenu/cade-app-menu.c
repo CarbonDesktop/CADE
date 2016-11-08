@@ -12,6 +12,7 @@
 #include "cade-app-menu.h"
 #include <appmenu/cade-app-row.h>
 
+
 #include <string.h>
 
 
@@ -40,7 +41,7 @@ struct _CadeAppMenuClass {
   GtkWindowClass parent_class;
 };
 
-G_DEFINE_TYPE (CadeAppMenu, cade_app_menu, GTK_TYPE_WINDOW)
+G_DEFINE_TYPE (CadeAppMenu, cade_app_menu, CADE_TYPE_PANEL_POPUP_WINDOW)
 
 static void
 cade_app_menu_class_init (CadeAppMenuClass *klass)
@@ -356,29 +357,4 @@ void cade_app_menu_revert(CadeAppMenu *menu)
 {
   menu->mode = MODE_START;
   app_activated(GTK_LIST_BOX(menu->list), GTK_LIST_BOX_ROW(menu->back), menu);
-}
-
-void cade_app_menu_set_relative_to(CadeAppMenu *menu, GtkWidget *relative)
-{
-  gtk_widget_realize(GTK_WIDGET(menu));
-  gtk_widget_show_all(GTK_WIDGET(menu));
-  GdkWindow *relativeWindow = gtk_widget_get_window(relative);
-  if(relativeWindow == NULL)
-  {
-    gtk_widget_realize(GTK_WIDGET(relative));
-    relativeWindow = gtk_widget_get_window(relative);
-  }
-  gint x = 0, y = 0;
-  gdk_window_get_position(relativeWindow, &x, &y);
-
-  gint height = 0, width = 0;
-  gtk_window_get_size(GTK_WINDOW(menu), &width, &height);
-  y -= height;
-
-  if(y < 0)
-  {
-    gdk_window_get_position(relativeWindow, &x, &y);
-    y += gdk_window_get_height(relativeWindow);
-  }
-  gtk_window_move(GTK_WINDOW(menu), x, y);
 }
