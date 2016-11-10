@@ -93,6 +93,11 @@ static void cade_panel_window_constructed(GObject *obj)
   GdkAtom atom = gdk_atom_intern("_NET_WM_STRUT", FALSE);
   GdkAtom card = gdk_atom_intern("CARDINAL", FALSE);
   gdk_property_change(gdkWindow, atom, card, 32, GDK_PROP_MODE_REPLACE, (guchar *)vals, 4);
+
+  GtkCssProvider *provider = gtk_css_provider_new();
+  GdkDisplay *display= gdk_display_get_default();
+  GdkScreen  *screen = gdk_display_get_default_screen(display);
+  gtk_style_context_add_provider_for_screen(screen, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_USER + 1); //Override default css
 }
 
 static void
@@ -106,6 +111,8 @@ cade_panel_window_class_init (CadePanelWindowClass *klass)
 
   obj_properties[PROP_POSITION] = g_param_spec_int("position", "Position", "Panel Position", 0, G_MAXINT, CADE_PANEL_POSITION_BOTTOM, G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE);
   g_object_class_install_properties(obj_class, N_PROPS, obj_properties);
+
+  gtk_widget_class_set_css_name(GTK_WIDGET_CLASS(klass), "CadePanel");
 }
 
 static gboolean _cade_panel_window_ensure_size(gpointer data)
@@ -129,7 +136,7 @@ cade_panel_window_init (CadePanelWindow *self)
 
   self->box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
   gtk_container_add(GTK_CONTAINER(self), self->box);
-  
+
   g_timeout_add(100, _cade_panel_window_ensure_size, self);
 
   self->windowController = cade_window_controller_new();
