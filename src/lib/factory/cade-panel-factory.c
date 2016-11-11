@@ -93,6 +93,17 @@ GList *cade_panel_factory_run(CadePanelFactory *factory, GtkApplication *app)
       continue;
     }
 
+    if(g_key_file_has_key(keyfile, "PanelConfiguration", "disable", NULL))
+    {
+      if(g_key_file_get_boolean(keyfile, "PanelConfiguration", "disable", NULL))
+      {
+        g_info("Skipped!");
+        g_key_file_unref(keyfile);
+        g_free(filePath);
+        continue;
+      }
+    }
+
     enum CadePanelPosition pos;
 
     gchar *temp = g_key_file_get_string(keyfile, "PanelConfiguration", "position", NULL);
