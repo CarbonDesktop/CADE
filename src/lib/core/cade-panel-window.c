@@ -112,7 +112,11 @@ cade_panel_window_class_init (CadePanelWindowClass *klass)
   obj_properties[PROP_POSITION] = g_param_spec_int("position", "Position", "Panel Position", 0, G_MAXINT, CADE_PANEL_POSITION_BOTTOM, G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE);
   g_object_class_install_properties(obj_class, N_PROPS, obj_properties);
 
-  gtk_widget_class_set_css_name(GTK_WIDGET_CLASS(klass), "CadePanel");
+  #if GTK_CHECK_VERSION(3,20,0)
+    gtk_widget_class_set_css_name(GTK_WIDGET_CLASS(klass), "CadePanel");
+  #else
+    #warning "Your GTK Version is lower than 3.20, so themes might not work well"
+  #endif
 }
 
 static gboolean _cade_panel_window_ensure_size(gpointer data)
