@@ -81,23 +81,53 @@ static void cade_panel_window_constructed(GObject *obj)
     vals[2] = 30;
   }
 
-  gtk_widget_realize(GTK_WIDGET(self));
+  GtkCssProvider *provider = gtk_css_provider_new();
+  GdkDisplay *display= gdk_display_get_default();
+  GdkScreen  *screen = gdk_display_get_default_screen(display);
+  gtk_style_context_add_provider_for_screen(screen, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_USER + 1); //Override default css
+
+  GKeyFile *conf = g_key_file_new();
+  gchar *confPath = g_strdup_printf("%s/.config/cade/config.ini", g_get_home_dir());
+  g_key_file_load_from_file(conf, confPath, G_KEY_FILE_NONE, NULL);
+  if(g_key_file_has_key(conf, "CadeConfig", "theme", NULL))
+  {
+
+    GdkScreen *screen = gtk_widget_get_screen(GTK_WIDGET(self));
+    GdkVisual *colormap = gdk_screen_get_rgba_visual(screen);
+
+    if (!colormap)
+    {
+        printf("Your screen does not support alpha channels!\n");
+        colormap = gdk_screen_get_system_visual(screen);
+    }
+    else
+    {
+        printf("Your screen supports alpha channels!\n");
+    }
+    gtk_widget_unrealize(GTK_WIDGET(self));
+    gtk_widget_set_visual(GTK_WIDGET(self), colormap);
+    gtk_widget_realize(GTK_WIDGET(self));
+
+    gchar *theme = g_key_file_get_string(conf, "CadeConfig", "theme", NULL);
+    g_debug("Using custom theme: '%s'", theme);
+    gchar *themePath = g_strdup_printf("/usr/share/themes/%s/cade/cade.css", theme);
+    gtk_css_provider_load_from_path(provider, themePath, NULL);
+    g_free(themePath);
+  }
+
+  g_free(confPath);
+  g_key_file_unref(conf);
 
   // Add struts
   GtkWidget *toplevel = gtk_widget_get_toplevel(GTK_WIDGET(self));
   GdkWindow *gdkWindow = gtk_widget_get_window(toplevel);
 
-
-
-
   GdkAtom atom = gdk_atom_intern("_NET_WM_STRUT", FALSE);
   GdkAtom card = gdk_atom_intern("CARDINAL", FALSE);
   gdk_property_change(gdkWindow, atom, card, 32, GDK_PROP_MODE_REPLACE, (guchar *)vals, 4);
 
-  GtkCssProvider *provider = gtk_css_provider_new();
-  GdkDisplay *display= gdk_display_get_default();
-  GdkScreen  *screen = gdk_display_get_default_screen(display);
-  gtk_style_context_add_provider_for_screen(screen, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_USER + 1); //Override default css
+
+
 }
 
 static void
