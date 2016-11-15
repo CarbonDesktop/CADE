@@ -11,6 +11,7 @@
 #include "cade-window-controller.h"
 #include <windowlist/cade-app-window.h>
 #include <gtk/gtk.h>
+#include <gdk/gdkx.h>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 
@@ -135,4 +136,19 @@ void cade_window_controller_select_window(CadeWindowController *controller, guin
   XSendEvent(d, XDefaultRootWindow(d), 0, SubstructureNotifyMask | SubstructureRedirectMask, &xEvent);
 
   XCloseDisplay(d);
+}
+
+GdkPixbuf *cade_window_controller_screenshot(CadeWindowController *controller, guint id)
+{
+  GdkWindow *win = gdk_x11_window_foreign_new_for_display(gdk_display_get_default(), id);
+  if(win == NULL)
+  {
+    g_critical("Could not find a window with ID=%d -> Screenshot failed", id);
+    return NULL;
+  }
+
+  gint w, h;
+  w = gdk_window_get_width(win);
+  h = gdk_window_get_height(win);
+  return gdk_pixbuf_get_from_window(win, 0, 0, w, h);
 }

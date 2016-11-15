@@ -9,6 +9,7 @@ noinst_HEADERS =         appmenu/cade-app-menu-button.h \
                          windowlist/cade-app-window.h   \
                          windowlist/cade-window-list-element.h \
                          windowlist/cade-window-list.h  \
+                         windowlist/cade-window-preview.h  \
                          factory/cade-panel-factory.h   \
                          spacer/cade-panel-spacer.h     \
                          launcher/cade-panel-launcher.h     \
@@ -27,6 +28,7 @@ libcade_core_la_SOURCES = appmenu/cade-app-menu-button.c  \
                          windowlist/cade-app-window.c   \
                          windowlist/cade-window-list-element.c \
                          windowlist/cade-window-list.c  \
+                         windowlist/cade-window-preview.c  \
                          spacer/cade-panel-spacer.c     \
                          launcher/cade-panel-launcher.c     \
                          ui/cade-panel-popup-window.c   \

@@ -30,6 +30,7 @@ CadeWindowController *cade_window_controller_new ();
 GList *cade_window_controller_get_all_windows(CadeWindowController *controller);
 guint cade_window_controller_get_active_id(CadeWindowController *controller);
 void cade_window_controller_select_window(CadeWindowController *controller, guint id);
+GdkPixbuf *cade_window_controller_screenshot(CadeWindowController *controller, guint id);
 
 G_END_DECLS
 
