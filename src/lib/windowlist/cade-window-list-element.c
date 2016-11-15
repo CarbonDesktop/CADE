@@ -11,6 +11,7 @@
 #include "cade-window-list-element.h"
 #include <data/cade-window-controller.h>
 #include <gtk/gtk.h>
+#include <gdk/gdkx.h>
 
 struct _CadeWindowListElement {
   GtkToggleButton parent_instance;
@@ -48,6 +49,25 @@ CadeWindowListElement *cade_window_list_element_new (gchar *title, guint winID)
 {
   CadeWindowListElement *ret = g_object_new (CADE_TYPE_WINDOW_LIST_ELEMENT, "relief", GTK_RELIEF_NONE, NULL);
   cade_window_list_element_set_label(ret, title);
+
+
+  GtkWidget *win = gtk_window_new(GTK_WINDOW_POPUP);
+  GdkPixbuf *pb;
+
+  GdkWindow *rw = gdk_x11_window_foreign_new_for_display(gdk_display_get_default(), winID);
+  gint w, h;
+  w = gdk_window_get_width(rw);
+  h = gdk_window_get_height(rw);
+  pb = gdk_pixbuf_get_from_window(rw, 0, 0, w, h);
+  pb = gdk_pixbuf_scale_simple(pb, 300, 200, GDK_INTERP_BILINEAR);
+
+  GtkWidget *img = gtk_image_new_from_pixbuf(pb);
+  gtk_container_add(GTK_CONTAINER(win), img);
+  gtk_widget_show_all(img);
+  gtk_widget_set_tooltip_window(GTK_WIDGET(ret), GTK_WINDOW(win));
+  gtk_widget_set_tooltip_markup(GTK_WIDGET(ret), " ");
+  gtk_widget_set_has_tooltip(GTK_WIDGET(ret), TRUE);
+
   ret->winID = winID;
   return ret;
 }
