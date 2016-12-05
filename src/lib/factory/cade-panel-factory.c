@@ -68,9 +68,12 @@ static void cade_panel_factory_handle_update(CadeWatchDog *dog, gchar *file, Cad
 
 
   CadePanelWindow *panel = cade_panel_factory_create_panel(factory, file, FALSE);
-  gtk_widget_show_all(GTK_WIDGET(panel));
-  gtk_window_present(GTK_WINDOW(panel));
-  factory->panels = g_list_append(factory->panels, panel);
+  if(panel != NULL)
+  {
+    gtk_widget_show_all(GTK_WIDGET(panel));
+    gtk_window_present(GTK_WINDOW(panel));
+    factory->panels = g_list_append(factory->panels, panel);
+  }
 }
 
 
@@ -125,7 +128,6 @@ CadePanelWindow *cade_panel_factory_create_panel(CadePanelFactory *factory, gcha
     {
       g_info("Skipped!");
       g_key_file_unref(keyfile);
-      g_free(filePath);
       return NULL;
     }
   }
@@ -196,10 +198,12 @@ GList *cade_panel_factory_run(CadePanelFactory *factory, GtkApplication *app)
 
     CadePanelWindow *panel = cade_panel_factory_create_panel(factory, filePath, TRUE);
 
-
-    gtk_widget_show_all(GTK_WIDGET(panel));
-    gtk_window_present(GTK_WINDOW(panel));
-    factory->panels = g_list_append(factory->panels, panel);
+    if(panel != NULL)
+    {
+      gtk_widget_show_all(GTK_WIDGET(panel));
+      gtk_window_present(GTK_WINDOW(panel));
+      factory->panels = g_list_append(factory->panels, panel);
+    }
 
     g_free(filePath);
   }
