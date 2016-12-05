@@ -27,6 +27,8 @@ G_DEFINE_TYPE (CadeWindowList, cade_window_list, GTK_TYPE_BOX)
 
 static gboolean _cade_window_list_refresh_windows(gpointer list)
 {
+  if(!CADE_IS_WINDOW_LIST(list))
+    return G_SOURCE_REMOVE;
   CadeWindowList *self = CADE_WINDOW_LIST(list);
 
   GList *windows = cade_window_controller_get_all_windows(self->controller);

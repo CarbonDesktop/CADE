@@ -55,7 +55,6 @@ cade_shell_application_class_init (CadeShellApplicationClass *klass)
 static void
 cade_shell_application_init (CadeShellApplication *self)
 {
-
 }
 
 CadeShellApplication *

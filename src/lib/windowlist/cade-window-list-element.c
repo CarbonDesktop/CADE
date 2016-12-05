@@ -11,6 +11,7 @@
 #include "cade-window-list-element.h"
 #include <data/cade-window-controller.h>
 #include <gtk/gtk.h>
+#include <windowlist/cade-window-preview.h>
 
 struct _CadeWindowListElement {
   GtkToggleButton parent_instance;
@@ -48,6 +49,11 @@ CadeWindowListElement *cade_window_list_element_new (gchar *title, guint winID)
 {
   CadeWindowListElement *ret = g_object_new (CADE_TYPE_WINDOW_LIST_ELEMENT, "relief", GTK_RELIEF_NONE, NULL);
   cade_window_list_element_set_label(ret, title);
+
+  gtk_widget_set_tooltip_window(GTK_WIDGET(ret), GTK_WINDOW(cade_window_preview_new(winID)));
+  gtk_widget_set_tooltip_markup(GTK_WIDGET(ret), " ");
+  gtk_widget_set_has_tooltip(GTK_WIDGET(ret), TRUE);
+
   ret->winID = winID;
   return ret;
 }
