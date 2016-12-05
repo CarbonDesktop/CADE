@@ -27,6 +27,7 @@ struct _CadePanelWindow {
   CadeWindowController *windowController;
 
   gint position;
+  gchar *file;
 };
 
 struct _CadePanelWindowClass {
@@ -97,13 +98,10 @@ static void cade_panel_window_constructed(GObject *obj)
 
     if (!colormap)
     {
-        printf("Your screen does not support alpha channels!\n");
+        g_warning("Your screen does not support alpha channels, so themes may not work as desired!");
         colormap = gdk_screen_get_system_visual(screen);
     }
-    else
-    {
-        printf("Your screen supports alpha channels!\n");
-    }
+
     gtk_widget_unrealize(GTK_WIDGET(self));
     gtk_widget_set_visual(GTK_WIDGET(self), colormap);
     gtk_widget_realize(GTK_WIDGET(self));
@@ -151,6 +149,8 @@ cade_panel_window_class_init (CadePanelWindowClass *klass)
 
 static gboolean _cade_panel_window_ensure_size(gpointer data)
 {
+  if(!CADE_IS_PANEL_WINDOW(data))
+    return G_SOURCE_REMOVE;
   CadePanelWindow *self = CADE_PANEL_WINDOW(data);
   gtk_window_resize(GTK_WINDOW(self), gdk_screen_get_width(self->screen), 30);
   return G_SOURCE_CONTINUE;
@@ -177,12 +177,19 @@ cade_panel_window_init (CadePanelWindow *self)
   cade_window_controller_get_all_windows(self->windowController);
 }
 
-CadePanelWindow *cade_panel_window_new (GtkApplication *app, enum CadePanelPosition pos)
+CadePanelWindow *cade_panel_window_new (GtkApplication *app, enum CadePanelPosition pos, gchar *file)
 {
-  return g_object_new (CADE_TYPE_PANEL_WINDOW, "application", app, "position", pos, NULL);
+  CadePanelWindow *w = g_object_new (CADE_TYPE_PANEL_WINDOW, "application", app, "position", pos, NULL);
+  w->file = g_strdup(file);
+  return w;
 }
 
 void cade_panel_window_add_widget(CadePanelWindow *panel, GtkWidget *widget)
 {
   gtk_box_pack_start(GTK_BOX(panel->box), GTK_WIDGET(widget), FALSE, FALSE, 0);
+}
+
+gchar *cade_panel_window_get_config_file(CadePanelWindow *win)
+{
+  return win->file;
 }
