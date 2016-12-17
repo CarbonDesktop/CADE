@@ -13,11 +13,18 @@
 #include <gtk/gtk.h>
 #include <windowlist/cade-window-preview.h>
 
+enum CONTEXT_OPTIONS {
+  CONTEXT_CLOSE = 0,
+  N_CONTEXT_OPTIONS
+};
+
 struct _CadeWindowListElement {
   GtkToggleButton parent_instance;
   GtkLabel *label;
   guint winID;
   CadeWindowController *controller;
+  GtkWidget *contextMenu;
+  GtkWidget *contextOptions[N_CONTEXT_OPTIONS];
 };
 
 struct _CadeWindowListElementClass {
@@ -39,10 +46,48 @@ static void _cade_window_list_element_toggle(GtkToggleButton *button, gpointer d
   }
 }
 
+static gint _cade_window_list_element_button_event(GtkWidget *w, GdkEvent *e, CadeWindowListElement *self)
+{
+  if (e->type == GDK_BUTTON_PRESS)
+  {
+    GdkEventButton *event_button = (GdkEventButton *) e;
+    if (event_button->button == GDK_BUTTON_SECONDARY)
+    {
+      #if GTK_CHECK_VERSION(3, 22, 0)
+        gtk_menu_popup_at_pointer (GTK_MENU(self->contextMenu), e);
+      #else
+        // TODO: This is not up to date, but we should keep it for quite some time
+        gtk_menu_popup(GTK_MENU(self->contextMenu), NULL, NULL, NULL, NULL, event_button->button, event_button->time);
+      #endif
+    }
+  }
+
+  return FALSE;
+}
+
+static void _cade_window_list_element_context(GtkMenuItem *item, CadeWindowListElement *self)
+{
+  if(item ==  GTK_MENU_ITEM(self->contextOptions[CONTEXT_CLOSE]))
+  {
+      cade_window_controller_close(self->controller, self->winID);
+  }
+}
+
 static void cade_window_list_element_init (CadeWindowListElement *self)
 {
   self->controller = cade_window_controller_new();
   g_signal_connect(self, "toggled", G_CALLBACK(_cade_window_list_element_toggle), self);
+
+  self->contextMenu = gtk_menu_new();
+
+  self->contextOptions[CONTEXT_CLOSE] = gtk_menu_item_new_with_label("Close");
+  g_signal_connect(self->contextOptions[CONTEXT_CLOSE], "activate", G_CALLBACK(_cade_window_list_element_context), self);
+
+  gtk_menu_shell_append(GTK_MENU_SHELL(self->contextMenu), self->contextOptions[CONTEXT_CLOSE]);
+
+  gtk_widget_show_all(GTK_WIDGET(self->contextMenu));
+
+  g_signal_connect(self, "button_press_event", G_CALLBACK(_cade_window_list_element_button_event), self);
 }
 
 CadeWindowListElement *cade_window_list_element_new (gchar *title, guint winID)

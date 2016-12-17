@@ -152,3 +152,12 @@ GdkPixbuf *cade_window_controller_screenshot(CadeWindowController *controller, g
   h = gdk_window_get_height(win);
   return gdk_pixbuf_get_from_window(win, 0, 0, w, h);
 }
+
+void cade_window_controller_close(CadeWindowController *controller, guint id)
+{
+  Display *d = XOpenDisplay(NULL);
+
+  XDestroyWindow(d, id); //TODO: Find a way to close this more 'soft'
+
+  XCloseDisplay(d);
+}

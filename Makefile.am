@@ -14,3 +14,6 @@ endif
 AUTHORS:
 	echo "GIT Contributors:" > AUTHORS
 	git log --format='%aN <%aE>' | sort -u >> AUTHORS
+
+dev-run:
+	./src/apps/shell/cade-shell
