@@ -157,7 +157,14 @@ void cade_window_controller_close(CadeWindowController *controller, guint id)
 {
   Display *d = XOpenDisplay(NULL);
 
-  XDestroyWindow(d, id); //TODO: Find a way to close this more 'soft'
-
+  XEvent event;
+  event.xclient.type = ClientMessage;
+  event.xclient.window = id;
+  event.xclient.message_type = XInternAtom(d, "WM_PROTOCOLS", TRUE);
+  event.xclient.format = 32;
+  event.xclient.data.l[0] = XInternAtom(d, "WM_DELETE_WINDOW", FALSE);
+  event.xclient.data.l[1] = CurrentTime;
+  XSendEvent(d, id, False, NoEventMask, &event);
+  
   XCloseDisplay(d);
 }
