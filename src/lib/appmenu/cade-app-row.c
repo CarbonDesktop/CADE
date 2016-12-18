@@ -11,6 +11,7 @@
 
 #include "cade-app-row.h"
 #include <stdlib.h>
+#include <string.h>
 
 struct _CadeAppRow {
   GtkListBoxRow parent_instance;
@@ -101,8 +102,12 @@ void cade_app_row_make_bold(CadeAppRow *row)
 
 void cade_app_row_execute(CadeAppRow *row)
 {
-  gchar *cmd = g_strdup_printf("%s &", row->exec);
+  GRegex *regex = g_regex_new("%.", 0, 0, NULL);
+  gchar *regRes = g_regex_replace(regex, row->exec, strlen(row->exec), 0, "", G_REGEX_MATCH_NOTEMPTY, NULL);
+  gchar *cmd = g_strdup_printf("%s &", regRes);
   if(system(cmd) != 0)
     g_warning("Executing %s failed!", cmd);
   g_free(cmd);
+  g_free(regRes);
+  g_regex_unref(regex);
 }

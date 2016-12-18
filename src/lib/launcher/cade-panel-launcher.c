@@ -1,5 +1,7 @@
 #include "cade-panel-launcher.h"
 #include <stdlib.h>
+#include <string.h>
+
 struct _CadePanelLauncher {
   GtkButton parent_instance;
   gchar *exec;
@@ -24,10 +26,14 @@ cade_panel_launcher_init (CadePanelLauncher *self)
 static void _clicked_launcher(GtkWidget *w, GdkEvent *e, gpointer p)
 {
   CadePanelLauncher *launcher = CADE_PANEL_LAUNCHER(w);
-  gchar *exec = g_strdup_printf("%s &", launcher->exec);
-  if(system(exec) != 0)
-    g_warning("Executing launcher command %s failed", exec);
-  g_free(exec);
+  GRegex *regex = g_regex_new("%.", 0, 0, NULL);
+  gchar *regRes = g_regex_replace(regex, launcher->exec, strlen(launcher->exec), 0, "", G_REGEX_MATCH_NOTEMPTY, NULL);
+  gchar *cmd = g_strdup_printf("%s &", regRes);
+  if(system(cmd) != 0)
+    g_warning("Executing launcher command %s failed", cmd);
+  g_free(cmd);
+  g_free(regRes);
+  g_regex_unref(regex);
 }
 
 void cade_panel_launcher_set_app(CadePanelLauncher *self, gchar *name)
