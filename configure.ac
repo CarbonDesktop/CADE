@@ -1,4 +1,4 @@
-AC_INIT([CADE], [0.1.1], [https://github.com/CarbonDesktop/CADE/issues], [cade], [https://github.com/CarbonDesktop/CADE])
+AC_INIT([CADE], [0.2.0], [https://github.com/CarbonDesktop/CADE/issues], [cade], [https://github.com/CarbonDesktop/CADE])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign subdir-objects])
 
 AM_PROG_AR
