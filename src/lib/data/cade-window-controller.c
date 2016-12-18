@@ -165,6 +165,23 @@ void cade_window_controller_close(CadeWindowController *controller, guint id)
   event.xclient.data.l[0] = XInternAtom(d, "WM_DELETE_WINDOW", FALSE);
   event.xclient.data.l[1] = CurrentTime;
   XSendEvent(d, id, False, NoEventMask, &event);
-  
+
+  XCloseDisplay(d);
+}
+
+void cade_window_controller_maximize(CadeWindowController *controller, guint id)
+{
+  Display *d = XOpenDisplay(NULL);
+
+  XEvent event;
+  event.xclient.type = ClientMessage;
+  event.xclient.window = id;
+  event.xclient.message_type = XInternAtom(d, "_NET_WM_STATE", TRUE);
+  event.xclient.format = 32;
+  event.xclient.data.l[0] = 1;
+  event.xclient.data.l[1] = XInternAtom(d, "_NET_WM_STATE_MAXIMIZED_VERT", FALSE);
+  event.xclient.data.l[2] = XInternAtom(d, "_NET_WM_STATE_MAXIMIZED_HORZ", FALSE);
+  XSendEvent(d, DefaultRootWindow(d), False, SubstructureNotifyMask, &event);
+
   XCloseDisplay(d);
 }

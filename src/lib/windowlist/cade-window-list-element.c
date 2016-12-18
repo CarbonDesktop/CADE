@@ -15,6 +15,7 @@
 
 enum CONTEXT_OPTIONS {
   CONTEXT_CLOSE = 0,
+  CONTEXT_MAXIMIZE,
   N_CONTEXT_OPTIONS
 };
 
@@ -67,9 +68,13 @@ static gint _cade_window_list_element_button_event(GtkWidget *w, GdkEvent *e, Ca
 
 static void _cade_window_list_element_context(GtkMenuItem *item, CadeWindowListElement *self)
 {
-  if(item ==  GTK_MENU_ITEM(self->contextOptions[CONTEXT_CLOSE]))
+  if(item == GTK_MENU_ITEM(self->contextOptions[CONTEXT_CLOSE]))
   {
-      cade_window_controller_close(self->controller, self->winID);
+    cade_window_controller_close(self->controller, self->winID);
+  }
+  else if(item == GTK_MENU_ITEM(self->contextOptions[CONTEXT_MAXIMIZE]))
+  {
+    cade_window_controller_maximize(self->controller, self->winID);
   }
 }
 
@@ -82,8 +87,20 @@ static void cade_window_list_element_init (CadeWindowListElement *self)
 
   self->contextOptions[CONTEXT_CLOSE] = gtk_menu_item_new_with_label("Close");
   g_signal_connect(self->contextOptions[CONTEXT_CLOSE], "activate", G_CALLBACK(_cade_window_list_element_context), self);
-
   gtk_menu_shell_append(GTK_MENU_SHELL(self->contextMenu), self->contextOptions[CONTEXT_CLOSE]);
+
+
+  // Action Menu
+  GtkWidget *actionMenu = gtk_menu_new();
+  GtkWidget *actionMenuItem = gtk_menu_item_new_with_label("Actions");
+  gtk_menu_shell_prepend(GTK_MENU_SHELL(self->contextMenu), actionMenuItem);
+  gtk_menu_item_set_submenu(GTK_MENU_ITEM(actionMenuItem), actionMenu);
+
+  // Action Menu -> Maximize
+  self->contextOptions[CONTEXT_MAXIMIZE] = gtk_menu_item_new_with_label("Maximize");
+  g_signal_connect(self->contextOptions[CONTEXT_MAXIMIZE], "activate", G_CALLBACK(_cade_window_list_element_context), self);
+  gtk_menu_shell_append(GTK_MENU_SHELL(actionMenu), self->contextOptions[CONTEXT_MAXIMIZE]);
+
 
   gtk_widget_show_all(GTK_WIDGET(self->contextMenu));
 
