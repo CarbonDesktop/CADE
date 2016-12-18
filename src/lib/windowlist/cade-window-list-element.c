@@ -16,6 +16,7 @@
 enum CONTEXT_OPTIONS {
   CONTEXT_CLOSE = 0,
   CONTEXT_MAXIMIZE,
+  CONTEXT_MINIMIZE,
   N_CONTEXT_OPTIONS
 };
 
@@ -76,6 +77,10 @@ static void _cade_window_list_element_context(GtkMenuItem *item, CadeWindowListE
   {
     cade_window_controller_maximize(self->controller, self->winID);
   }
+  else if(item == GTK_MENU_ITEM(self->contextOptions[CONTEXT_MINIMIZE]))
+  {
+    cade_window_controller_minimize(self->controller, self->winID);
+  }
 }
 
 static void cade_window_list_element_init (CadeWindowListElement *self)
@@ -100,6 +105,11 @@ static void cade_window_list_element_init (CadeWindowListElement *self)
   self->contextOptions[CONTEXT_MAXIMIZE] = gtk_menu_item_new_with_label("Maximize");
   g_signal_connect(self->contextOptions[CONTEXT_MAXIMIZE], "activate", G_CALLBACK(_cade_window_list_element_context), self);
   gtk_menu_shell_append(GTK_MENU_SHELL(actionMenu), self->contextOptions[CONTEXT_MAXIMIZE]);
+
+  // Action Menu -> Minimize
+  self->contextOptions[CONTEXT_MINIMIZE] = gtk_menu_item_new_with_label("Minimize");
+  g_signal_connect(self->contextOptions[CONTEXT_MINIMIZE], "activate", G_CALLBACK(_cade_window_list_element_context), self);
+  gtk_menu_shell_append(GTK_MENU_SHELL(actionMenu), self->contextOptions[CONTEXT_MINIMIZE]);
 
 
   gtk_widget_show_all(GTK_WIDGET(self->contextMenu));

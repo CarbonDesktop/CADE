@@ -33,6 +33,7 @@ void cade_window_controller_select_window(CadeWindowController *controller, guin
 GdkPixbuf *cade_window_controller_screenshot(CadeWindowController *controller, guint id);
 void cade_window_controller_close(CadeWindowController *controller, guint id);
 void cade_window_controller_maximize(CadeWindowController *controller, guint id);
+void cade_window_controller_minimize(CadeWindowController *controller, guint id);
 
 G_END_DECLS
 

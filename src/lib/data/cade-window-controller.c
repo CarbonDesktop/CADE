@@ -185,3 +185,18 @@ void cade_window_controller_maximize(CadeWindowController *controller, guint id)
 
   XCloseDisplay(d);
 }
+
+void cade_window_controller_minimize(CadeWindowController *controller, guint id)
+{
+  Display *d = XOpenDisplay(NULL);
+
+  XEvent event;
+  event.xclient.type = ClientMessage;
+  event.xclient.window = id;
+  event.xclient.message_type = XInternAtom(d, "WM_CHANGE_STATE", TRUE);
+  event.xclient.format = 32;
+  event.xclient.data.l[0] = IconicState;
+  XSendEvent(d, DefaultRootWindow(d), False, SubstructureRedirectMask|SubstructureNotifyMask, &event);
+
+  XCloseDisplay(d);
+}
