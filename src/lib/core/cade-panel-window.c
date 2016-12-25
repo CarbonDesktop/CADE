@@ -134,7 +134,7 @@ static void cade_panel_window_constructed(GObject *obj)
 
   GdkAtom atom = gdk_atom_intern("_NET_WM_STRUT", FALSE);
   GdkAtom card = gdk_atom_intern("CARDINAL", FALSE);
-  /*TODO: BUG */gdk_property_change(gdkWindow, atom, card, 32, GDK_PROP_MODE_REPLACE, (guchar *)vals, 4);
+  gdk_property_change(gdkWindow, atom, card, 32, GDK_PROP_MODE_REPLACE, (guchar *)vals, 4);
 
 }
 
@@ -186,7 +186,7 @@ cade_panel_window_init (CadePanelWindow *self)
   g_timeout_add(100, _cade_panel_window_ensure_size, self);
 
   self->windowController = cade_window_controller_new();
-  cade_window_controller_get_all_windows(self->windowController);
+  cade_window_controller_get_all_windows(self->windowController, TRUE);
 
 
 }

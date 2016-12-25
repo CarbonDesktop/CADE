@@ -42,7 +42,7 @@ cade_window_controller_new ()
 
 // Public methods
 
-GList *cade_window_controller_get_all_windows(CadeWindowController *controller)
+GList *cade_window_controller_get_all_windows(CadeWindowController *controller, gboolean checkTaskbar)
 {
   Display *d = XOpenDisplay(NULL);
   Atom clientListAtom = XInternAtom(d, "_NET_CLIENT_LIST", False);
@@ -97,7 +97,7 @@ GList *cade_window_controller_get_all_windows(CadeWindowController *controller)
      }
      XFree(atomList);
 
-     if(skipTaskbar)
+     if(skipTaskbar && checkTaskbar)
       continue; //Window should not be displayed in taskbar
 
      Atom nameAtom = XInternAtom(d, "_NET_WM_NAME", False);

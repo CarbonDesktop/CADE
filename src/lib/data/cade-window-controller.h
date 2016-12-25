@@ -27,7 +27,7 @@ typedef struct _CadeWindowControllerClass   CadeWindowControllerClass;
 
 GType                 cade_window_controller_get_type (void) G_GNUC_CONST;
 CadeWindowController *cade_window_controller_new ();
-GList *cade_window_controller_get_all_windows(CadeWindowController *controller);
+GList *cade_window_controller_get_all_windows(CadeWindowController *controller, gboolean checkTaskbar);
 guint cade_window_controller_get_active_id(CadeWindowController *controller);
 void cade_window_controller_select_window(CadeWindowController *controller, guint id);
 GdkPixbuf *cade_window_controller_screenshot(CadeWindowController *controller, guint id);

@@ -31,7 +31,7 @@ static gboolean _cade_window_list_refresh_windows(gpointer list)
     return G_SOURCE_REMOVE;
   CadeWindowList *self = CADE_WINDOW_LIST(list);
 
-  GList *windows = cade_window_controller_get_all_windows(self->controller);
+  GList *windows = cade_window_controller_get_all_windows(self->controller, TRUE);
   GList *existing = gtk_container_get_children(GTK_CONTAINER(self));
   GList *existingIter;
   GList *iter = windows;
