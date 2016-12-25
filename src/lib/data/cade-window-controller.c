@@ -69,6 +69,37 @@ GList *cade_window_controller_get_all_windows(CadeWindowController *controller)
      *  as a list and then return it to the request
      */
      Window w = realList[x];
+
+     Atom stateAtom = XInternAtom(d, "_NET_WM_STATE", False);
+     Atom hiddenType;
+     int hiddenForm;
+     unsigned long hiddenLen, hiddenRemain;
+     Atom *atomList = NULL;
+     if(XGetWindowProperty(d, w, stateAtom, 0, 1024, False, XA_ATOM, &hiddenType, &hiddenForm, &hiddenLen, &hiddenRemain, (unsigned char **)&atomList))
+     {
+       g_warning("Could not get window states of window with id %ld", w);
+       continue;
+     }
+
+     gboolean skipTaskbar = FALSE;
+
+     for(unsigned long i = 0; i < hiddenLen; i++)
+     {
+       char *atomName = XGetAtomName(d, atomList[i]);
+
+       if(strcmp(atomName, "_NET_WM_STATE_SKIP_TASKBAR") == 0)
+       {
+         skipTaskbar = TRUE;
+         break;
+       }
+
+       XFree(atomName);
+     }
+     XFree(atomList);
+
+     if(skipTaskbar)
+      continue; //Window should not be displayed in taskbar
+
      Atom nameAtom = XInternAtom(d, "_NET_WM_NAME", False);
      Atom nameType;
      char *name;               // Name of the window (title)
