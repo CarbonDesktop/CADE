@@ -81,6 +81,10 @@ static void cade_panel_window_constructed(GObject *obj)
     gtk_window_move(win, 0, 0);
     vals[2] = 30;
   }
+  else
+  {
+    g_critical("Unknown panel position");
+  }
 
   GtkCssProvider *provider = gtk_css_provider_new();
   GdkDisplay *display= gdk_display_get_default();
@@ -89,29 +93,37 @@ static void cade_panel_window_constructed(GObject *obj)
 
   GKeyFile *conf = g_key_file_new();
   gchar *confPath = g_strdup_printf("%s/.config/cade/config.ini", g_get_home_dir());
-  g_key_file_load_from_file(conf, confPath, G_KEY_FILE_NONE, NULL);
-  if(g_key_file_has_key(conf, "CadeConfig", "theme", NULL))
+  if(g_file_test(confPath, G_FILE_TEST_EXISTS))
   {
-
-    GdkScreen *screen = gtk_widget_get_screen(GTK_WIDGET(self));
-    GdkVisual *colormap = gdk_screen_get_rgba_visual(screen);
-
-    if (!colormap)
+    g_key_file_load_from_file(conf, confPath, G_KEY_FILE_NONE, NULL);
+    if(g_key_file_has_key(conf, "CadeConfig", "theme", NULL))
     {
-        g_warning("Your screen does not support alpha channels, so themes may not work as desired!");
-        colormap = gdk_screen_get_system_visual(screen);
+
+      GdkScreen *screen = gtk_widget_get_screen(GTK_WIDGET(self));
+      GdkVisual *colormap = gdk_screen_get_rgba_visual(screen);
+
+      if (!colormap)
+      {
+          g_warning("Your screen does not support alpha channels, so themes may not work as desired!");
+          colormap = gdk_screen_get_system_visual(screen);
+      }
+
+      gtk_widget_unrealize(GTK_WIDGET(self));
+      gtk_widget_set_visual(GTK_WIDGET(self), colormap);
+
+      gchar *theme = g_key_file_get_string(conf, "CadeConfig", "theme", NULL);
+      g_debug("Using custom theme: '%s'", theme);
+      gchar *themePath = g_strdup_printf("/usr/share/themes/%s/cade/cade.css", theme);
+      gtk_css_provider_load_from_path(provider, themePath, NULL);
+      g_free(themePath);
     }
-
-    gtk_widget_unrealize(GTK_WIDGET(self));
-    gtk_widget_set_visual(GTK_WIDGET(self), colormap);
-    gtk_widget_realize(GTK_WIDGET(self));
-
-    gchar *theme = g_key_file_get_string(conf, "CadeConfig", "theme", NULL);
-    g_debug("Using custom theme: '%s'", theme);
-    gchar *themePath = g_strdup_printf("/usr/share/themes/%s/cade/cade.css", theme);
-    gtk_css_provider_load_from_path(provider, themePath, NULL);
-    g_free(themePath);
   }
+  else
+  {
+    g_message("Could not find local config file (%s)", confPath);
+  }
+
+  gtk_widget_realize(GTK_WIDGET(self));
 
   g_free(confPath);
   g_key_file_unref(conf);
@@ -122,9 +134,7 @@ static void cade_panel_window_constructed(GObject *obj)
 
   GdkAtom atom = gdk_atom_intern("_NET_WM_STRUT", FALSE);
   GdkAtom card = gdk_atom_intern("CARDINAL", FALSE);
-  gdk_property_change(gdkWindow, atom, card, 32, GDK_PROP_MODE_REPLACE, (guchar *)vals, 4);
-
-
+  /*TODO: BUG */gdk_property_change(gdkWindow, atom, card, 32, GDK_PROP_MODE_REPLACE, (guchar *)vals, 4);
 
 }
 
@@ -168,6 +178,8 @@ cade_panel_window_init (CadePanelWindow *self)
   // Position
   gtk_window_set_default_size(win, gdk_screen_get_width(self->screen), 30);
 
+
+
   self->box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
   gtk_container_add(GTK_CONTAINER(self), self->box);
 
@@ -175,6 +187,8 @@ cade_panel_window_init (CadePanelWindow *self)
 
   self->windowController = cade_window_controller_new();
   cade_window_controller_get_all_windows(self->windowController);
+
+
 }
 
 CadePanelWindow *cade_panel_window_new (GtkApplication *app, enum CadePanelPosition pos, gchar *file)

@@ -224,6 +224,11 @@ static gboolean toggle_search(GtkSearchEntry *w, CadeAppMenu *menu)
 static void load_apps_from_dir(CadeAppMenu *self, gchar *path)
 {
   GDir *dir = g_dir_open(path, 0, NULL);
+  if(dir == NULL)
+  {
+    g_debug("Skipping dir '%s': does not exist", path);
+    return;
+  }
   const gchar *file;
 
   while((file = g_dir_read_name(dir)) != NULL )
