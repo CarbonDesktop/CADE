@@ -198,9 +198,16 @@ CadePanelWindow *cade_panel_window_new (GtkApplication *app, enum CadePanelPosit
   return w;
 }
 
-void cade_panel_window_add_widget(CadePanelWindow *panel, GtkWidget *widget)
+void cade_panel_window_add_widget(CadePanelWindow *panel, GtkWidget *widget, gchar *pull)
 {
-  gtk_box_pack_start(GTK_BOX(panel->box), GTK_WIDGET(widget), FALSE, FALSE, 0);
+  if(g_strcmp0(pull, "end") == 0)
+  {
+    gtk_box_pack_end(GTK_BOX(panel->box), GTK_WIDGET(widget), FALSE, FALSE, 0);
+  }
+  else
+  {
+    gtk_box_pack_start(GTK_BOX(panel->box), GTK_WIDGET(widget), FALSE, FALSE, 0);
+  }
 }
 
 gchar *cade_panel_window_get_config_file(CadePanelWindow *win)

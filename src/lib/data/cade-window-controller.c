@@ -87,7 +87,7 @@ GList *cade_window_controller_get_all_windows(CadeWindowController *controller, 
      {
        char *atomName = XGetAtomName(d, atomList[i]);
 
-       if(strcmp(atomName, "_NET_WM_STATE_SKIP_TASKBAR") == 0)
+       if(g_strcmp0(atomName, "_NET_WM_STATE_SKIP_TASKBAR") == 0)
        {
          skipTaskbar = TRUE;
          break;

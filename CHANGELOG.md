@@ -7,7 +7,13 @@ rules:
 * All entries with `V.X.Y.Z[-p] (YYYY-MM-DD)`
 * Changes are either `ADD:`, `FIX:`, `DEL:` or `DEP: (will be removed soon)`
 
+## Current DEV
 
+### ADD
+ * Option to pull elements to the end
+
+### FIX
+ * Fixed minor compiller warning
 
 ## V.0.2.1 (2016-12-26)
 

@@ -149,10 +149,15 @@ CadePanelWindow *cade_panel_factory_create_panel(CadePanelFactory *factory, gcha
 
   gsize n = 1;
   gchar *group = NULL;
-  
+
   while((group = getGroup(keyfile, n)) != NULL)
   {
     gchar *type = g_key_file_get_string(keyfile, group, "type", NULL);
+    gchar *pull = NULL;
+    if(g_key_file_has_key(keyfile, group, "pull", NULL))
+    {
+      pull = g_key_file_get_string(keyfile, group, "pull", NULL);
+    }
 
     GType typeID = g_type_from_name(type);
 
@@ -175,12 +180,12 @@ CadePanelWindow *cade_panel_factory_create_panel(CadePanelFactory *factory, gcha
     else
       widget = func(params);
 
-
-
-    cade_panel_window_add_widget(panel, widget);
+    cade_panel_window_add_widget(panel, widget, pull);
 
 
     g_free(group);
+    if(pull != NULL)
+      g_free(pull);
     n++;
   }
   g_key_file_unref(keyfile);
