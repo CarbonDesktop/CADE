@@ -38,9 +38,10 @@ static void _clicked_launcher(GtkWidget *w, GdkEvent *e, gpointer p)
 
 void cade_panel_launcher_set_app(CadePanelLauncher *self, gchar *name)
 {
-  gchar *config = g_strdup_printf("/usr/share/applications/%s.desktop", name);
+  gchar *config = g_strdup_printf("%s.desktop", name);
   GKeyFile *keyfile = g_key_file_new();
-  if(!g_key_file_load_from_file(keyfile, config, G_KEY_FILE_NONE, NULL))
+  const gchar *dirs[] =  { "/usr/share/applications/", "/usr/local/share/applications/" , NULL};
+  if(!g_key_file_load_from_dirs(keyfile, config, dirs , NULL, G_KEY_FILE_NONE, NULL))
   {
     g_critical("App %s not found (%s)", name, config);
     g_free(config);
