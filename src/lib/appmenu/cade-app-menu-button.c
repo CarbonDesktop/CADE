@@ -11,10 +11,12 @@
 
 #include "cade-app-menu-button.h"
 #include <appmenu/cade-app-menu.h>
+#include <gtk/gtk.h>
 
 struct _CadeAppMenuButton {
   GtkToggleButton parent_instance;
   CadeAppMenu *menu;
+  gulong handlerID;
 };
 
 struct _CadeAppMenuButtonClass {
@@ -30,8 +32,8 @@ static void cade_app_menu_button_toggle(GtkToggleButton *tb)
   CadeAppMenuButton *self = CADE_APP_MENU_BUTTON(tb);
   if (!gtk_widget_is_visible(GTK_WIDGET(self->menu)))
   {
-    cade_panel_popup_window_set_relative_to(CADE_PANEL_POPUP_WINDOW(self->menu), GTK_WIDGET(self));
     gtk_widget_show_all(GTK_WIDGET(self->menu));
+    cade_panel_popup_window_set_relative_to(CADE_PANEL_POPUP_WINDOW(self->menu), GTK_WIDGET(self));
     gtk_widget_set_visible(GTK_WIDGET(self->menu), TRUE);
   }
   else
@@ -43,17 +45,25 @@ static void cade_app_menu_button_toggle(GtkToggleButton *tb)
 
 // Object
 
+static void cade_app_menu_button_reset (GtkWidget *w, CadeAppMenuButton *self)
+{
+  g_signal_handler_block(self, self->handlerID);
+  gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(self), FALSE);
+  g_signal_handler_unblock(self, self->handlerID);
+}
 
 static void
 cade_app_menu_button_class_init (CadeAppMenuButtonClass *klass)
 {
-  GTK_TOGGLE_BUTTON_CLASS(klass)->toggled = cade_app_menu_button_toggle;
+//  GTK_TOGGLE_BUTTON_CLASS(klass)->toggled = cade_app_menu_button_toggle;
 }
 
 static void
 cade_app_menu_button_init (CadeAppMenuButton *self)
 {
   self->menu = cade_app_menu_new(GTK_WIDGET(self));
+  self->handlerID = g_signal_connect(self, "toggled", G_CALLBACK(cade_app_menu_button_toggle), self);
+  g_signal_connect(self->menu, "hide", G_CALLBACK(cade_app_menu_button_reset), self);
 }
 
 GtkWidget *
