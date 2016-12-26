@@ -55,7 +55,6 @@ static void cade_app_menu_button_reset (GtkWidget *w, CadeAppMenuButton *self)
 static void
 cade_app_menu_button_class_init (CadeAppMenuButtonClass *klass)
 {
-//  GTK_TOGGLE_BUTTON_CLASS(klass)->toggled = cade_app_menu_button_toggle;
 }
 
 static void
