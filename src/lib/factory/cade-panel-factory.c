@@ -143,11 +143,13 @@ CadePanelWindow *cade_panel_factory_create_panel(CadePanelFactory *factory, gcha
   {
     pos = CADE_PANEL_POSITION_BOTTOM;
   }
+
+
   CadePanelWindow *panel = cade_panel_window_new(factory->app, pos, filePath);
 
   gsize n = 1;
   gchar *group = NULL;
-
+  
   while((group = getGroup(keyfile, n)) != NULL)
   {
     gchar *type = g_key_file_get_string(keyfile, group, "type", NULL);
