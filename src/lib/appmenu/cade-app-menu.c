@@ -30,6 +30,8 @@ struct _CadeAppMenu {
 
   GtkWidget *back;
 
+  GtkWidget *backButton;
+
   /* DATA */
   enum APP_MENU_MODE mode;
   GList *categoryList;
@@ -157,6 +159,8 @@ void app_activated (GtkListBox *box, GtkListBoxRow *row, CadeAppMenu *menu)
       iter = iter->next;
     }
     menu->mode = MODE_START;
+    gtk_widget_set_opacity(menu->backButton, 0.0);
+
     return;
   }
 
@@ -179,7 +183,9 @@ void app_activated (GtkListBox *box, GtkListBoxRow *row, CadeAppMenu *menu)
       gtk_list_box_prepend(GTK_LIST_BOX(menu->list), GTK_WIDGET(w));
       iter = iter->next;
     }
-    gtk_list_box_prepend(GTK_LIST_BOX(menu->list), GTK_WIDGET(menu->back));
+    gtk_widget_set_opacity(menu->backButton, 1.0);
+    cade_panel_popup_window_set_relative_to(CADE_PANEL_POPUP_WINDOW(menu), menu->relative);
+
   }
   else
   {
@@ -304,6 +310,11 @@ static void load_apps_from_dir(CadeAppMenu *self, gchar *path)
   }
 }
 
+static void back_button_clicked(GtkWidget *w, GdkEvent *e, CadeAppMenu *menu)
+{
+  app_activated(GTK_LIST_BOX(menu->list), GTK_LIST_BOX_ROW(menu->back), menu);
+}
+
 /* 'public' */
 
 static void
@@ -317,7 +328,7 @@ cade_app_menu_init (CadeAppMenu *self)
   gtk_container_add(GTK_CONTAINER(self), grid);
 
   self->search = gtk_search_entry_new();
-  gtk_grid_attach(GTK_GRID(grid), self->search, 0,2, 3, 1);
+  gtk_grid_attach(GTK_GRID(grid), self->search, 0,3, 3, 1);
 
   GtkWidget *scrollBox = gtk_scrolled_window_new(NULL, NULL);
   gtk_scrolled_window_set_min_content_height(GTK_SCROLLED_WINDOW(scrollBox), 500);
@@ -331,6 +342,10 @@ cade_app_menu_init (CadeAppMenu *self)
 
   _build_category_list(self);
 
+  self->backButton = gtk_button_new_with_label("Back");
+  gtk_widget_set_opacity(self->backButton, 0.0);
+  gtk_grid_attach(GTK_GRID(grid), self->backButton, 0,2,3,1);
+  g_signal_connect(self->backButton, "clicked", G_CALLBACK(back_button_clicked), self);
 
   app_activated(GTK_LIST_BOX(self->list), GTK_LIST_BOX_ROW(self->back), self);
 
@@ -355,11 +370,13 @@ CadeAppMenu *
 cade_app_menu_new (GtkWidget *parent)
 {
   CadeAppMenu *menu = g_object_new (CADE_TYPE_APP_MENU, "type" ,GTK_WINDOW_POPUP, NULL);
+  menu->relative = parent;
   return menu;
 }
 
 void cade_app_menu_revert(CadeAppMenu *menu)
 {
   menu->mode = MODE_START;
+  gtk_widget_set_opacity(menu->backButton, 0.0);
   app_activated(GTK_LIST_BOX(menu->list), GTK_LIST_BOX_ROW(menu->back), menu);
 }

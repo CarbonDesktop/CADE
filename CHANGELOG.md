@@ -11,6 +11,7 @@ rules:
 
 ### ADD
  * Option to pull elements to the end
+ * New back button in app menu
 
 ### FIX
  * Fixed minor compiller warning
